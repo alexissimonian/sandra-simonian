@@ -2,13 +2,23 @@
   import { enhance } from "$app/forms";
 
   export let form;
+
+  let currentStep = form?.step || "email";
+
+  $: if (form?.step) {
+    currentStep = form.step;
+  }
+
+  function goBackToEmail() {
+    currentStep = "email";
+  }
 </script>
 
 {#if form?.error}
   <p class="error">{form.error}</p>
 {/if}
 
-{#if !form?.step || form?.step === "email"}
+{#if currentStep === "email"}
   <form id="login-form" action="?/login" method="post" use:enhance>
     <input
       type="email"
@@ -20,7 +30,7 @@
   <button form="login-form" type="submit">Entrer</button>
 {/if}
 
-{#if form?.step === "code"}
+{#if currentStep === "code"}
   <form id="code-form" action="?/code" method="post" use:enhance>
     <input type="hidden" name="email" value={form?.email} />
     <input
@@ -32,7 +42,7 @@
     />
   </form>
   <button form="code-form" type="submit">Entrer</button>
-  <a href="/login">Changer l'email d'envoi</a>
+  <button type="button" on:click={goBackToEmail}>Changer l'email d'envoi</button>
 {/if}
 
 <style lang="scss"></style>

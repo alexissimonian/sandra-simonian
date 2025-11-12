@@ -1,3 +1,4 @@
+import { env } from "$env/dynamic/private";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 
 export const actions: Actions = {
@@ -31,7 +32,9 @@ export const actions: Actions = {
       return fail(400, { error: error.code, step: "code", email, code })
     }
 
-    if (data.user?.email === "alexis.simonian@proton.me") {
+    const amdinEmails = env.SECRET_ADMIN_EMAILS.split(",");
+
+    if (data.user?.email && amdinEmails.includes(data.user?.email)) {
       throw redirect(303, "/admin")
     }
 
