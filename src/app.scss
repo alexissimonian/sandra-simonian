@@ -10,6 +10,18 @@ body {
   font-family: "Inter", sans-serif;
 }
 
+.faux-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+h2 {
+  color: $blue;
+  font-size: 3rem;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
