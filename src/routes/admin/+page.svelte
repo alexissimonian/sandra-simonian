@@ -1,7 +1,8 @@
 <script>
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
+  import Button from "$lib/components/Button.svelte";
 </script>
 
 <h1>Admin Page</h1>
-<button onclick={() => goto(page.url.pathname + "/users")}>Utilisateurs</button>
+<Button onclick={() => goto(page.url.pathname + "/users")}>Utilisateurs</Button>

@@ -1,5 +1,6 @@
 <script>
+  import Button from "$lib/components/Button.svelte";
 </script>
 
 <h1>User Page</h1>
-<button>Créer un utilisateur</button>
+<Button>Créer un utilisateur</Button>

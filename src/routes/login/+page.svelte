@@ -1,5 +1,6 @@
 <script>
   import { enhance } from "$app/forms";
+  import Button from "$lib/components/Button.svelte";
 
   export let form;
 
@@ -27,7 +28,7 @@
       required
     />
   </form>
-  <button form="login-form" type="submit">Entrer</button>
+  <Button form="login-form" type="submit">Entrer</Button>
 {/if}
 
 {#if currentStep === "code"}
@@ -41,8 +42,9 @@
       required
     />
   </form>
-  <button form="code-form" type="submit">Entrer</button>
-  <button type="button" on:click={goBackToEmail}>Changer l'email d'envoi</button>
+  <Button form="code-form" type="submit">Entrer</Button>
+  <button type="button" on:click={goBackToEmail}>Changer l'email d'envoi</button
+  >
 {/if}
 
 <style lang="scss"></style>
