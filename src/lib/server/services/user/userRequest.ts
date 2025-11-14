@@ -1,11 +1,17 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Tables } from "$lib/types";
+import { AppError } from "$lib/errors/errorHandler";
 
 type ProfileRow = Tables<'profiles'>;
 
 export async function getUserProfile(supabase: SupabaseClient): Promise<ProfileRow> {
   const { data, error } = await supabase.from("profiles").select().single();
 
-  if (error) throw error;
+  if (error) {
+    console.error("Un problème est survenu lors de la récupération du profile: " + error.code)
+    throw new AppError("Un problème est survenu lors de la récupération du profile", {
+      redirectToErrorPage: true,
+    })
+  };
   return data;
 }

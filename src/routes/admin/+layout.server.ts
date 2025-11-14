@@ -2,6 +2,8 @@ import { redirect } from '@sveltejs/kit'
 import type { LayoutServerLoad } from './$types'
 import { getUserProfile } from '$lib/server/services/user/userRequest';
 import { generateProfile } from '$lib/types';
+import type { Profile } from '$lib/types';
+import { handleError } from '$lib/errors/errorHandler';
 
 export const load: LayoutServerLoad = async ({ locals, cookies }) => {
   const { session, user } = await locals.safeGetSession();
@@ -12,10 +14,15 @@ export const load: LayoutServerLoad = async ({ locals, cookies }) => {
   }
 
   // Load profile
-  const profileRow = await getUserProfile(locals.supabase);
-  const profile = generateProfile(profileRow, user);
+  let profile: Profile | undefined = undefined;
+  try {
+    const profileRow = await getUserProfile(locals.supabase);
+    profile = generateProfile(profileRow, user);
+  } catch (error) {
+    handleError(error);
+  }
 
-  if (profile.role != "admin") {
+  if (profile?.role != "admin") {
     throw redirect(303, '/app')
   }
 

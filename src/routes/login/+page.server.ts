@@ -1,5 +1,17 @@
 import { env } from "$env/dynamic/private";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
+import type { PageServerLoad } from "./$types";
+
+export const load: PageServerLoad = async ({ locals }) => {
+  const { data: { session } } = await locals.supabase.auth.getSession();
+
+  // Redirect to app if already authenticated
+  if (session) {
+    throw redirect(303, '/app');
+  }
+
+  return {};
+};
 
 export const actions: Actions = {
   login: async ({ request, locals }) => {
