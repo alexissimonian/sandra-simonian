@@ -1,6 +1,7 @@
 <script lang="ts">
   import favicon from "$lib/assets/favicon.svg";
-  import { Willow } from "@svar-ui/svelte-core";
+  import { Willow as WillowCore } from "@svar-ui/svelte-core";
+  import { Willow as WillowGrid } from "@svar-ui/svelte-grid";
   import "../app.scss";
 
   let { children } = $props();
@@ -10,8 +11,10 @@
   <link rel="icon" href={favicon} />
 </svelte:head>
 
-<Willow>
-  <div class="app-wrapper">
-    {@render children()}
-  </div>
-</Willow>
+<WillowCore>
+  <WillowGrid>
+    <div class="app-wrapper">
+      {@render children()}
+    </div>
+  </WillowGrid>
+</WillowCore>

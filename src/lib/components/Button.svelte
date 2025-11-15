@@ -20,6 +20,3 @@
 <Button {type} {...otherProps}>
   {@render children()}
 </Button>
-
-<style lang="scss">
-</style>

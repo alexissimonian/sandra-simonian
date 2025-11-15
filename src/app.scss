@@ -1,3 +1,10 @@
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
 .app-wrapper {
   --wx-color-primary: #{$orange};
 }
@@ -7,20 +14,19 @@ html {
   overflow-x: hidden;
 }
 
-body {
-  margin: 0;
-}
-
 .faux-body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  @include flex-center;
+
 }
 
 h2 {
   color: $blue;
-  font-size: 3rem;
+  font-size: 2rem;
+}
+
+section {
+  @include flex-center;
+  width: 100%;
 }
 
 .sr-only {
