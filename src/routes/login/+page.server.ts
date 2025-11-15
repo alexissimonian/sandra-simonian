@@ -43,7 +43,7 @@ export const actions: Actions = {
       return fail(400, { error: "Oops, nous n\'avons pas pu vérifier votre code ! Réessayez.", step: "code", email, code })
     }
 
-    throw redirect(303, "/app");
+    throw redirect(303, "/app?source=login");
 
   }
 } 

@@ -3,6 +3,7 @@ import type { LayoutServerLoad } from './$types'
 import { getUserProfile } from '$lib/server/services/user/userRequest';
 import { generateProfile, type Profile } from '$lib/types';
 import { handleError } from '$lib/errors/errorHandler';
+import { page } from '$app/state';
 
 export const load: LayoutServerLoad = async ({ locals, cookies }) => {
   const { session, user } = await locals.safeGetSession();
@@ -19,6 +20,12 @@ export const load: LayoutServerLoad = async ({ locals, cookies }) => {
     profile = generateProfile(profileRow, user);
   } catch (error) {
     handleError(error);
+  }
+
+  // If admin from login go to admin
+  const source = page.url.searchParams.get("source");
+  if (profile?.role === "admin" && source === "login") {
+    redirect(303, "/admin")
   }
 
   return {
