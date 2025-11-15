@@ -1,4 +1,3 @@
-import { env } from "$env/dynamic/private";
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
@@ -40,14 +39,8 @@ export const actions: Actions = {
       type: "email"
     });
 
-    if (error) {
-      return fail(400, { error: error.code, step: "code", email, code })
-    }
-
-    const amdinEmails = env.SECRET_ADMIN_EMAILS.split(",");
-
-    if (data.user?.email && amdinEmails.includes(data.user?.email)) {
-      throw redirect(303, "/admin")
+    if (error || !data.user?.email) {
+      return fail(400, { error: "Oops, nous n\'avons pas pu vérifier votre code ! Réessayez.", step: "code", email, code })
     }
 
     throw redirect(303, "/app");

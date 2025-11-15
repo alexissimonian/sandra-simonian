@@ -1,27 +1,25 @@
 <script lang="ts">
+  import { Button } from "@svar-ui/svelte-core";
+
   let {
     children,
-    type = "button" as "button" | "submit" | "reset",
+    type = "primary" as
+      | "primary"
+      | "secondary"
+      | "link"
+      | "danger"
+      | "primary block"
+      | "secondary block"
+      | "link block"
+      | "danger block"
+      | undefined,
     ...otherProps
   } = $props();
 </script>
 
-<button {type} {...otherProps}>
+<Button {type} {...otherProps}>
   {@render children()}
-</button>
+</Button>
 
 <style lang="scss">
-  button {
-    background-color: $orange;
-    color: $white;
-    cursor: pointer;
-    border: 0px;
-    padding: 0.75em 1em;
-    border-radius: 7px;
-    font-weight: 500;
-  }
-
-  button:hover {
-    background-color: $light-orange;
-  }
 </style>
