@@ -11,7 +11,9 @@ export interface Profile {
   memberSince?: string;
 }
 
-export function generateProfile(row: Tables<'profiles'>, user: User): Profile {
+export type ProfileRow = Tables<'profiles'>;
+
+export function generateProfile(row: ProfileRow, user: User): Profile {
   const profile: Profile = {
     name: capitalize(row.name),
     surname: capitalize(row.surname),

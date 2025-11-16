@@ -1,8 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Tables } from "$lib/types";
+import type { ProfileRow } from "$lib/types";
 import { AppError } from "$lib/errors/errorHandler";
-
-type ProfileRow = Tables<'profiles'>;
 
 export async function getUserProfile(supabase: SupabaseClient): Promise<ProfileRow> {
   const { data, error } = await supabase.from("profiles").select().single();
