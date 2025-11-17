@@ -3,9 +3,8 @@ import type { LayoutServerLoad } from './$types'
 import { getUserProfile } from '$lib/server/services/user/userRequest';
 import { generateProfile, type Profile } from '$lib/types';
 import { handleError } from '$lib/errors/errorHandler';
-import { page } from '$app/state';
 
-export const load: LayoutServerLoad = async ({ locals, cookies }) => {
+export const load: LayoutServerLoad = async ({ locals, cookies, url }) => {
   const { session, user } = await locals.safeGetSession();
 
   // Redirect to login if not authenticated
@@ -23,7 +22,7 @@ export const load: LayoutServerLoad = async ({ locals, cookies }) => {
   }
 
   // If admin from login go to admin
-  const source = page.url.searchParams.get("source");
+  const source = url.searchParams.get("source");
   if (profile?.role === "admin" && source === "login") {
     redirect(303, "/admin")
   }

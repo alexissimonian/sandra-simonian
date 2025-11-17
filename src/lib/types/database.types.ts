@@ -17,7 +17,7 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
-          id: number
+          id: string
           memberSince: string | null
           name: string
           role: string
@@ -26,7 +26,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          id?: number
+          id?: string
           memberSince?: string | null
           name: string
           role?: string
@@ -35,7 +35,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          id?: number
+          id?: string
           memberSince?: string | null
           name?: string
           role?: string
@@ -46,7 +46,20 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      detailed_profiles: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string | null
+          last_sign_in_at: string | null
+          memberSince: string | null
+          name: string | null
+          role: string | null
+          surname: string | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never

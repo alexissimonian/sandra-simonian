@@ -1,9 +1,9 @@
 import { AppError } from "$lib/errors/errorHandler";
 import { supabaseAdminClient } from "$lib/server/db/adminClient";
-import type { ProfileRow } from "$lib/types";
+import type { DetailedProfileRow } from "$lib/types";
 
-export async function getAllProfiles(): Promise<ProfileRow[]> {
-  const { data, error } = await supabaseAdminClient.from("profiles").select("*");
+export async function getAllProfiles(): Promise<DetailedProfileRow[]> {
+  const { data, error } = await supabaseAdminClient.from("detailed_profiles").select("*");
 
   if (error) {
     console.error("Error retreiving profiles: " + error.code);
