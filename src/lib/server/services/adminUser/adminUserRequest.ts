@@ -1,9 +1,10 @@
 import { AppError } from "$lib/errors/errorHandler";
 import { supabaseAdminClient } from "$lib/server/db/adminClient";
-import type { DetailedProfileRow } from "$lib/types";
+import { generateProfile } from "$lib/server/services/user/userRequest";
+import type { Profile } from "$lib/types";
 
-export async function getAllProfiles(): Promise<DetailedProfileRow[]> {
-  const { data, error } = await supabaseAdminClient.from("detailed_profiles").select("*");
+export async function getAllProfiles(): Promise<Profile[]> {
+  const { data, error } = await supabaseAdminClient.from("profiles").select("*");
 
   if (error) {
     console.error("Error retreiving profiles: " + error.code);
@@ -12,5 +13,7 @@ export async function getAllProfiles(): Promise<DetailedProfileRow[]> {
     })
   }
 
-  return data;
+  let profiles = data.map(generateProfile);
+
+  return profiles;
 }

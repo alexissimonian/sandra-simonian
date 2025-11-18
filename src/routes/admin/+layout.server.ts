@@ -1,7 +1,6 @@
 import { redirect } from '@sveltejs/kit'
 import type { LayoutServerLoad } from './$types'
 import { getUserProfile } from '$lib/server/services/user/userRequest';
-import { generateProfile } from '$lib/types';
 import type { Profile } from '$lib/types';
 import { handleError } from '$lib/errors/errorHandler';
 
@@ -16,8 +15,7 @@ export const load: LayoutServerLoad = async ({ locals, cookies }) => {
   // Load profile
   let profile: Profile | undefined = undefined;
   try {
-    const profileRow = await getUserProfile(locals.supabase);
-    profile = generateProfile(profileRow, user);
+    profile = await getUserProfile(locals.supabase);
   } catch (error) {
     handleError(error);
   }

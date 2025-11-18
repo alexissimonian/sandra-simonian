@@ -1,6 +1,6 @@
-import { goto } from '$app/navigation';
 import { addNotification } from '$lib/stores/notifications';
 import type { AppErrorOptions } from '$lib/types';
+import { redirect } from '@sveltejs/kit';
 
 export class AppError extends Error {
   showNotification: boolean;
@@ -27,12 +27,11 @@ export function handleError(error: unknown): void {
     }
 
     if (error.redirectToErrorPage) {
-      goto(`/error?message=${encodeURIComponent(error.message)}`);
-      return;
+      throw redirect(303, `/error?message=${encodeURIComponent(error.message)}`);
     }
   }
 
   // Default: redirect to error page
   const message = error instanceof Error ? error.message : 'An unexpected error occurred';
-  goto(`/error?message=${encodeURIComponent(message)}`);
+  throw redirect(303, `/error?message=${encodeURIComponent(message)}`);
 }

@@ -1,35 +1,18 @@
 <script lang="ts">
   import Button from "$lib/components/Button.svelte";
   import { Grid } from "@svar-ui/svelte-grid";
-  import type { PageData } from "../$types";
+  import type { PageData } from "./$types";
 
   export let data: PageData;
-  let gridData: any[] = [
-    {
-      id: 1,
-      city: "Amieshire",
-      email: "Leora13@yahoo.com",
-      firstName: "Ernest",
-      lastName: "Schuppe",
-      companyName: "Lebsack - Nicolas",
-    },
-    {
-      id: 2,
-      city: "Gust",
-      email: "Mose_Gerhold51@yahoo.com",
-      firstName: "Janis",
-      lastName: "Vandervort",
-      companyName: "Glover - Hermiston",
-    },
-  ];
+  let gridData: any[] = data.profiles;
   let gridColumns: any[] = [
     {
-      id: "firstName",
+      id: "name",
       header: "Prénom",
       flexgrow: 1,
     },
     {
-      id: "lastName",
+      id: "surname",
       header: "Nom",
       flexgrow: 1,
     },
@@ -39,12 +22,7 @@
       flexgrow: 1,
     },
     {
-      id: "email_verified",
-      header: "Vérifié",
-      width: 75,
-    },
-    {
-      id: "last_logged_in",
+      id: "lastSignInDate",
       header: "Dernière Connexion",
       flexgrow: 1,
     },

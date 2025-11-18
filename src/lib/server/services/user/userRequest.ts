@@ -1,32 +1,29 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { DetailedProfileRow, Profile } from "$lib/types";
+import type { Profile, ProfileRow } from "$lib/types";
 import { AppError } from "$lib/errors/errorHandler";
-import { capitalize, assertType } from "$lib/utils";
+import { capitalize } from "$lib/utils";
 
-export async function getUserProfile(supabase: SupabaseClient): Promise<DetailedProfileRow> {
+export async function getUserProfile(supabase: SupabaseClient): Promise<Profile> {
   const { data, error } = await supabase.from("profiles").select().single();
 
   if (error) {
-    console.error("Un problème est survenu lors de la récupération du profile: " + error.code)
+    console.error("Un problème est survenu lors de la récupération du profile: " + error.message);
     throw new AppError("Un problème est survenu lors de la récupération du profile", {
       redirectToErrorPage: true,
     })
   };
-  return data;
+  return generateProfile(data);
 }
 
-export function generateProfile(row: DetailedProfileRow): Profile {
+export function generateProfile(row: ProfileRow): Profile {
   const profile: Profile = {
-    name: capitalize(assertType(row.name)),
-    surname: capitalize(assertType(row.surname)),
-    email: assertType(row.email),
-    role: assertType(row.role),
-    createDate: assertType(row.created_at),
+    name: capitalize(row.name),
+    surname: capitalize(row.surname),
+    email: row.email,
+    role: row.role,
+    createDate: row.created_at,
     lastSignInDate: row.last_sign_in_at ?? undefined,
-  }
-
-  if (row.memberSince) {
-    profile.memberSince = row.memberSince
+    memberSince: row.memberSince ?? undefined
   }
 
   return profile;

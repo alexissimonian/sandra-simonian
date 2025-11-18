@@ -10,5 +10,5 @@ export interface Profile {
   lastSignInDate?: string;
 }
 
-export type DetailedProfileRow = Tables<'detailed_profiles'>;
+export type ProfileRow = Tables<'profiles'>;
 
