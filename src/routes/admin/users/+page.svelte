@@ -2,10 +2,17 @@
   import Button from "$lib/components/Button.svelte";
   import { Grid } from "@svar-ui/svelte-grid";
   import type { PageData } from "./$types";
+  import SelectionCheckboxCell from "$lib/components/grid/SelectionCheckboxCell.svelte";
+  import type { IApi } from "@svar-ui/svelte-grid";
 
   export let data: PageData;
   let gridData: any[] = data.profiles;
   let gridColumns: any[] = [
+    {
+      id: "select",
+      cell: SelectionCheckboxCell,
+      width: 36,
+    },
     {
       id: "name",
       header: "Prénom",
@@ -26,10 +33,9 @@
       header: "Dernière Connexion",
       flexgrow: 1,
     },
-    {
-      width: 75,
-    },
   ];
+
+  function gridInit(api: IApi) {}
 </script>
 
 <svelte:head>
@@ -47,7 +53,12 @@
       <Button type="primary">Créer</Button>
     </div>
     <div class="grid-container">
-      <Grid data={gridData} columns={gridColumns} />
+      <Grid
+        data={gridData}
+        columns={gridColumns}
+        select={false}
+        init={gridInit}
+      />
     </div>
   </section>
 </div>
