@@ -1,12 +1,13 @@
 <script lang="ts">
   import { Checkbox } from "@svar-ui/svelte-core";
 
-  let { row, api } = $props();
+  let { row, api, multiselect = false } = $props();
 
   function onChange(ev: any) {
     const { value } = ev;
 
-    if (value) {
+    // Si single-select, désélectionner les autres avant de sélectionner
+    if (value && !multiselect) {
       api.exec("unselect-all");
     }
 

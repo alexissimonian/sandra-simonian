@@ -1,11 +1,11 @@
 <script lang="ts">
   import Button from "$lib/components/Button.svelte";
-  import { Grid } from "@svar-ui/svelte-grid";
+  import { Grid, type IApi } from "@svar-ui/svelte-grid";
   import type { PageData } from "./$types";
   import SelectionCheckboxCell from "$lib/components/grid/SelectionCheckboxCell.svelte";
-  import type { IApi } from "@svar-ui/svelte-grid";
 
-  export let data: PageData;
+  let { data }: { data: PageData } = $props();
+
   let gridData: any[] = data.profiles;
   let gridColumns: any[] = [
     {
@@ -35,7 +35,12 @@
     },
   ];
 
-  function gridInit(api: IApi) {}
+  let api = $state<any>();
+  let selectedRow = $state<string>();
+
+  const updateSelected = () => {
+    selectedRow = api.getState().selectedRows[0];
+  };
 </script>
 
 <svelte:head>
@@ -48,16 +53,17 @@
       <h2>Nos Utilisateurs</h2>
     </header>
     <div class="buttons-container">
-      <Button type="danger" disabled={true}>Supprimer</Button>
-      <Button type="secondary" disabled={true}>Editer</Button>
+      <Button type="danger" disabled={!selectedRow}>Supprimer</Button>
+      <Button type="secondary" disabled={!selectedRow}>Editer</Button>
       <Button type="primary">Créer</Button>
     </div>
     <div class="grid-container">
       <Grid
+        bind:this={api}
         data={gridData}
         columns={gridColumns}
         select={false}
-        init={gridInit}
+        onselectrow={updateSelected}
       />
     </div>
   </section>
