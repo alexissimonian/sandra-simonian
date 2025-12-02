@@ -13,7 +13,7 @@
 
 <h1 class="sr-only">Sandra Simonian - Admin Center</h1>
 <div class="faux-body">
-  <h2>Hello, {data.profile?.name}</h2>
+  <h2>Hello, {data.profile?.firstname}</h2>
   <div class="buttons-containers">
     <Button onclick={() => goto("/app")}>App</Button>
     <Button onclick={() => goto(page.url.pathname + "/users")}

@@ -2,8 +2,8 @@ import type { Tables } from "../database.types";
 
 export interface Profile {
   id: string;
-  name: string;
-  surname: string;
+  firstname: string;
+  lastname: string;
   email: string;
   role: string;
   createDate: string;

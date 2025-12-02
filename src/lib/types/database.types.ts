@@ -14,41 +14,203 @@ export type Database = {
   }
   public: {
     Tables: {
+      activités: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+          visibility: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+          visibility?: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          visibility?: boolean
+        }
+        Relationships: []
+      }
+      activités_profiles: {
+        Row: {
+          activite_id: string
+          profile_id: string
+          status: string
+        }
+        Insert: {
+          activite_id: string
+          profile_id: string
+          status?: string
+        }
+        Update: {
+          activite_id?: string
+          profile_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activités_profiles_activite_id_fkey"
+            columns: ["activite_id"]
+            isOneToOne: false
+            referencedRelation: "activités"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "activités_profiles_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      modules: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      modules_activités: {
+        Row: {
+          activite_id: string
+          module_id: string
+        }
+        Insert: {
+          activite_id: string
+          module_id: string
+        }
+        Update: {
+          activite_id?: string
+          module_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "modules_activités_activite_id_fkey"
+            columns: ["activite_id"]
+            isOneToOne: false
+            referencedRelation: "activités"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "modules_activités_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "modules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
           email: string
+          firstname: string
           id: string
           last_sign_in_at: string | null
+          lastname: string
           memberSince: string | null
-          name: string
           role: string
-          surname: string
-          user_id: string
         }
         Insert: {
           created_at?: string
           email: string
-          id?: string
+          firstname: string
+          id: string
           last_sign_in_at?: string | null
+          lastname: string
           memberSince?: string | null
-          name: string
           role?: string
-          surname: string
-          user_id: string
         }
         Update: {
           created_at?: string
           email?: string
+          firstname?: string
           id?: string
           last_sign_in_at?: string | null
+          lastname?: string
           memberSince?: string | null
-          name?: string
           role?: string
-          surname?: string
-          user_id?: string
         }
         Relationships: []
+      }
+      thématiques: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      thématiques_modules: {
+        Row: {
+          id_module: string
+          id_thématique: string
+        }
+        Insert: {
+          id_module: string
+          id_thématique: string
+        }
+        Update: {
+          id_module?: string
+          id_thématique?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "thématiques_modules_id_module_fkey"
+            columns: ["id_module"]
+            isOneToOne: false
+            referencedRelation: "modules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "thématiques_modules_id_thématique_fkey"
+            columns: ["id_thématique"]
+            isOneToOne: false
+            referencedRelation: "thématiques"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

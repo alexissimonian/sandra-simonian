@@ -18,8 +18,8 @@ export async function getUserProfile(supabase: SupabaseClient): Promise<Profile>
 export function generateProfile(row: ProfileRow): Profile {
   const profile: Profile = {
     id: row.id,
-    name: capitalize(row.name),
-    surname: capitalize(row.surname),
+    firstname: capitalize(row.firstname),
+    lastname: capitalize(row.lastname),
     email: row.email,
     role: row.role,
     createDate: row.created_at,

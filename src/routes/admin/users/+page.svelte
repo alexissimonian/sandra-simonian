@@ -1,8 +1,10 @@
 <script lang="ts">
   import Button from "$lib/components/Button.svelte";
-  import { Grid, type IApi } from "@svar-ui/svelte-grid";
+  import { Grid } from "@svar-ui/svelte-grid";
   import type { PageData } from "./$types";
   import SelectionCheckboxCell from "$lib/components/grid/SelectionCheckboxCell.svelte";
+  import { goto } from "$app/navigation";
+  import { page } from "$app/state";
 
   let { data }: { data: PageData } = $props();
 
@@ -12,14 +14,15 @@
       id: "select",
       cell: SelectionCheckboxCell,
       width: 36,
+      disable: { condition: "role", value: "admin" },
     },
     {
-      id: "name",
+      id: "firstname",
       header: "Prénom",
       flexgrow: 1,
     },
     {
-      id: "surname",
+      id: "lastname",
       header: "Nom",
       flexgrow: 1,
     },
@@ -33,6 +36,10 @@
       header: "Dernière Connexion",
       flexgrow: 1,
     },
+    {
+      id: "role",
+      hidden: true,
+    },
   ];
 
   let api = $state<any>();
@@ -40,6 +47,14 @@
 
   const updateSelected = () => {
     selectedRow = api.getState().selectedRows[0];
+  };
+
+  const gotoEditPage = () => {
+    goto(`${page.url.pathname}/edit/${selectedRow}`);
+  };
+
+  const gotoCreatePage = () => {
+    goto(`${page.url.pathname}/create`);
   };
 </script>
 
@@ -54,8 +69,10 @@
     </header>
     <div class="buttons-container">
       <Button type="danger" disabled={!selectedRow}>Supprimer</Button>
-      <Button type="secondary" disabled={!selectedRow}>Editer</Button>
-      <Button type="primary">Créer</Button>
+      <Button type="secondary" disabled={!selectedRow} onclick={gotoEditPage}
+        >Editer</Button
+      >
+      <Button type="primary" onclick={gotoCreatePage}>Créer</Button>
     </div>
     <div class="grid-container">
       <Grid
@@ -70,6 +87,12 @@
 </div>
 
 <style lang="scss">
+  .faux-body {
+    height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
+
   .buttons-container {
     display: flex;
     justify-content: flex-end;
