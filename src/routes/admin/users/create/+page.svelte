@@ -69,7 +69,6 @@
           {/snippet}
         </Field>
       </form>
-      <Button type="primary" onclick={() => validateForm()}>Créer</Button>
       <div>
         {#if isLastnameError}
           <p class="error-message">
@@ -83,6 +82,10 @@
           <p class="error-message">Cet email n'est pas valide.</p>
         {/if}
       </div>
+      <Button type="primary" onclick={() => validateForm()}>Créer</Button>
     </div>
   </section>
 </div>
+
+<style lang="scss">
+</style>

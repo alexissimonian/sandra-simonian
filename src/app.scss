@@ -6,6 +6,15 @@
 
 .app-wrapper {
   --wx-color-primary: #{$orange};
+  --wx-input-border-focus: 1px solid #{$orange};
+
+  --wx-table-select-background: #{$white};
+  --wx-table-select-border: inset 3px 0 #{$orange};
+  --wx-table-header-background: #{$blue};
+
+  .wx-grid .wx-header {
+    color: $white;
+  }
 }
 
 html {
@@ -21,6 +30,10 @@ body {
 .faux-body {
   @include flex-center;
 
+}
+
+.error-message {
+  color: var(--wx-color-danger);
 }
 
 h2 {

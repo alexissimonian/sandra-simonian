@@ -13,9 +13,5 @@ export async function sendFormData(path: string, formData: FormData): Promise<Re
     body: formData,
   });
 
-  if (response.ok) {
-    console.log(response);
-  }
-
   return response;
 }

@@ -1,66 +1,102 @@
 <script lang="ts">
-  import { enhance } from "$app/forms";
+  import { goto } from "$app/navigation";
   import Button from "$lib/components/Button.svelte";
+  import { sendFormData, validateEmailField } from "$lib/utils/form";
+  import { Text, Field } from "@svar-ui/svelte-core";
 
-  export let form;
-  let emailForm: HTMLFormElement;
-  let codeForm: HTMLFormElement;
-
-  let currentStep = form?.step || "email";
-
-  $: if (form?.step) {
-    currentStep = form.step;
-  }
+  let currentStep = $state("email");
+  let isEmailError = $state(false);
+  let email = $state("");
+  let code = $state("");
+  let isCodeError = $state(false);
 
   function goBackToEmail() {
     currentStep = "email";
   }
+
+  async function validateEmailForm() {
+    isEmailError = !validateEmailField(email);
+    if (!isEmailError) {
+      const formData = new FormData();
+      formData.append("email", email);
+      const response = await sendFormData("?/login", formData);
+      if (response.status === 200) {
+        currentStep = "code";
+      }
+    }
+  }
+
+  function validateCodeField(): boolean {
+    const regex = /\d{8}/;
+    return regex.test(code);
+  }
+
+  async function validateCodeForm() {
+    isCodeError = !validateCodeField();
+    if (!isCodeError) {
+      const formData = new FormData();
+      formData.append("code", code);
+      formData.append("email", email);
+      const response = await sendFormData("?/code", formData);
+      if (response.status === 200) {
+        goto("/app?source=login");
+      }
+    }
+  }
 </script>
 
-{#if form?.error}
-  <p class="error">{form.error}</p>
-{/if}
+<div class="faux-body">
+  {#if currentStep === "email"}
+    <form>
+      <Field label="Email" error={isEmailError} required>
+        {#snippet children({ id })}
+          <Text
+            bind:value={email}
+            {id}
+            error={isEmailError}
+            onchange={() => (isEmailError = false)}
+            placeholder="votre@email.com"
+          />
+        {/snippet}
+      </Field>
+    </form>
+    {#if isEmailError}
+      <p class="error-message">Veuillez entrer un email valide.</p>
+    {/if}
+    <Button type="primary" onclick={() => validateEmailForm()}>Entrer</Button>
+  {/if}
 
-{#if currentStep === "email"}
-  <form
-    id="login-form"
-    action="?/login"
-    method="post"
-    bind:this={emailForm}
-    use:enhance
-  >
-    <input
-      type="email"
-      name="email"
-      placeholder="exemple@exemple.com"
-      required
-    />
-  </form>
-  <Button type="primary" onclick={() => emailForm.requestSubmit()}
-    >Entrer</Button
-  >
-{/if}
+  {#if currentStep === "code"}
+    <form>
+      <Field label="Code" error={isCodeError} required>
+        {#snippet children({ id })}
+          <Text
+            bind:value={code}
+            {id}
+            error={isCodeError}
+            onchange={() => (isCodeError = false)}
+            placeholder="00000000"
+          />
+        {/snippet}
+      </Field>
+    </form>
+    <div class="code-validation-buttons">
+      <Button type="primary" onclick={() => validateCodeForm()}>Entrer</Button>
+      <Button type="link" onclick={() => goBackToEmail()}
+        >Changer l'email d'envoi</Button
+      >
+    </div>
+  {/if}
+</div>
 
-{#if currentStep === "code"}
-  <form
-    id="code-form"
-    action="?/code"
-    method="post"
-    bind:this={codeForm}
-    use:enhance
-  >
-    <input type="hidden" name="email" value={form?.email} />
-    <input
-      type="text"
-      name="code"
-      placeholder="000-000"
-      value={form?.code || ""}
-      required
-    />
-  </form>
-  <Button type="primary" onclick={() => codeForm.requestSubmit()}>Entrer</Button
-  >
-  <Button type="link" onclick={goBackToEmail}>Changer l'email d'envoi</Button>
-{/if}
+<style lang="scss">
+  .faux-body {
+    height: 100dvh;
+    justify-content: center;
+  }
 
-<style lang="scss"></style>
+  .code-validation-buttons {
+    display: flex;
+    gap: 2rem;
+  }
+</style>

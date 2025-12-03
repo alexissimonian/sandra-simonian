@@ -2,10 +2,10 @@ import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ locals }) => {
-  const { data: { session } } = await locals.supabase.auth.getSession();
+  const profile = locals.profile;
 
   // Redirect to app if already authenticated
-  if (session) {
+  if (profile) {
     throw redirect(303, '/app');
   }
 
@@ -21,12 +21,11 @@ export const actions: Actions = {
       email
     });
 
-
     if (error) {
-      return fail(400, { error: error.code });
+      return fail(400, { error: "Impossible de trouver cet email" });
     }
 
-    return { success: true, email: email, step: "code" };
+    return { success: true };
   },
   code: async ({ request, locals }) => {
     const formData = await request.formData();
@@ -40,10 +39,11 @@ export const actions: Actions = {
     });
 
     if (error || !data.user?.email) {
-      return fail(400, { error: "Oops, nous n\'avons pas pu vérifier votre code ! Réessayez.", step: "code", email, code })
+      console.log("eroro here")
+      return fail(400, { error: "Oops, nous n\'avons pas pu vérifier votre code ! Réessayez." })
+
     }
 
-    throw redirect(303, "/app?source=login");
-
+    return { connected: true };
   }
 } 
