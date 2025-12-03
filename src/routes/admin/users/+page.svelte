@@ -78,10 +78,8 @@
       <h2>Nos Utilisateurs</h2>
     </header>
     <div class="buttons-container">
-      <Button
-        type="danger"
-        disabled={!selectedRow}
-        onclick={deleteSelectedUser()}>Supprimer</Button
+      <Button type="danger" disabled={!selectedRow} onclick={deleteSelectedUser}
+        >Supprimer</Button
       >
       <Button type="secondary" disabled={!selectedRow} onclick={gotoEditPage}
         >Editer</Button

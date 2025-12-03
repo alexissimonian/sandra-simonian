@@ -1,5 +1,6 @@
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
+import { error } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async ({ locals }) => {
   const profile = locals.profile;
@@ -17,12 +18,12 @@ export const actions: Actions = {
     const data = await request.formData();
     const email = data.get("email") as string;
 
-    const { error } = await locals.supabase.auth.signInWithOtp({
+    const { error: emailError } = await locals.supabase.auth.signInWithOtp({
       email
     });
 
-    if (error) {
-      return fail(400, { error: "Impossible de trouver cet email" });
+    if (emailError) {
+      throw error(400, "Impossible de trouver cet email");
     }
 
     return { success: true };
@@ -32,16 +33,14 @@ export const actions: Actions = {
     const code = formData.get("code") as string;
     const email = formData.get("email") as string;
 
-    const { data, error } = await locals.supabase.auth.verifyOtp({
+    const { data, error: codeError } = await locals.supabase.auth.verifyOtp({
       email,
       token: code,
       type: "email"
     });
 
-    if (error || !data.user?.email) {
-      console.log("eroro here")
-      return fail(400, { error: "Oops, nous n\'avons pas pu vérifier votre code ! Réessayez." })
-
+    if (codeError || !data.user?.email) {
+      throw error(400, "Oops, nous n\'avons pas pu vérifier votre code ! Réessayez.")
     }
 
     return { connected: true };

@@ -3,6 +3,9 @@
   import Button from "$lib/components/Button.svelte";
   import { sendFormData, validateEmailField } from "$lib/utils/form";
   import { Text, Field } from "@svar-ui/svelte-core";
+  import { text } from "@sveltejs/kit";
+  import { getContext } from "svelte";
+  const { showNotice } = getContext<any>("wx-helpers");
 
   let currentStep = $state("email");
   let isEmailError = $state(false);
@@ -22,7 +25,26 @@
       const response = await sendFormData("?/login", formData);
       if (response.status === 200) {
         currentStep = "code";
+        showNotice({
+          type: "success",
+          expire: 6000,
+          text: "Email envoyé !",
+        });
+      } else {
+        isEmailError = true;
+        const message = await response.json();
+        showNotice({
+          type: "danger",
+          expire: 6000,
+          text: message.error.message ?? "Un problème est survenu.",
+        });
       }
+    } else {
+      showNotice({
+        type: "danger",
+        expire: 6000,
+        text: "Veuillez entrer un email valide.",
+      });
     }
   }
 
@@ -40,7 +62,21 @@
       const response = await sendFormData("?/code", formData);
       if (response.status === 200) {
         goto("/app?source=login");
+      } else {
+        isCodeError = true;
+        const message = await response.json();
+        showNotice({
+          type: "danger",
+          expire: 6000,
+          text: message.error.message ?? "Un problème est survenu.",
+        });
       }
+    } else {
+      showNotice({
+        type: "danger",
+        expire: 6000,
+        text: "Le code est composé de 8 chiffres.",
+      });
     }
   }
 </script>
@@ -61,10 +97,9 @@
         {/snippet}
       </Field>
     </form>
-    {#if isEmailError}
-      <p class="error-message">Veuillez entrer un email valide.</p>
-    {/if}
-    <Button type="primary" onclick={() => validateEmailForm()}>Entrer</Button>
+    <Button type="primary" onclick={() => validateEmailForm()}
+      >Me connecter</Button
+    >
   {/if}
 
   {#if currentStep === "code"}
