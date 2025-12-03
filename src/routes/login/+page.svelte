@@ -46,6 +46,7 @@
 </script>
 
 <div class="faux-body">
+  <h2>Bienvenue</h2>
   {#if currentStep === "email"}
     <form>
       <Field label="Email" error={isEmailError} required>
@@ -92,11 +93,15 @@
 <style lang="scss">
   .faux-body {
     height: 100dvh;
-    justify-content: center;
   }
 
   .code-validation-buttons {
     display: flex;
     gap: 2rem;
+  }
+
+  h2 {
+    font-size: 4rem;
+    margin: 2em;
   }
 </style>

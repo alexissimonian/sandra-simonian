@@ -1,6 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Profile, ProfileRow } from "$lib/types";
-import { AppError } from "$lib/errors/errorHandler";
 import { capitalize } from "$lib/utils";
 
 export async function getUserProfile(supabase: SupabaseClient): Promise<Profile> {
@@ -8,9 +7,7 @@ export async function getUserProfile(supabase: SupabaseClient): Promise<Profile>
 
   if (error) {
     console.error("Un problème est survenu lors de la récupération du profile: " + error.message);
-    throw new AppError("Un problème est survenu lors de la récupération du profile", {
-      redirectToErrorPage: true,
-    })
+    throw new Error("Un problème est survenu lors de la récupération du profile.");
   };
   return generateProfile(data);
 }

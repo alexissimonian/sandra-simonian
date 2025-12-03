@@ -5,6 +5,8 @@
   import SelectionCheckboxCell from "$lib/components/grid/SelectionCheckboxCell.svelte";
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
+  import { getContext } from "svelte";
+  const { showNotice } = getContext<any>("wx-helpers");
 
   let { data }: { data: PageData } = $props();
 
@@ -56,6 +58,14 @@
   const gotoCreatePage = () => {
     goto(`${page.url.pathname}/create`);
   };
+
+  async function deleteSelectedUser() {
+    showNotice({
+      type: "info",
+      expire: 6000,
+      text: "Utilisateur supprimé !",
+    });
+  }
 </script>
 
 <svelte:head>
@@ -68,7 +78,11 @@
       <h2>Nos Utilisateurs</h2>
     </header>
     <div class="buttons-container">
-      <Button type="danger" disabled={!selectedRow}>Supprimer</Button>
+      <Button
+        type="danger"
+        disabled={!selectedRow}
+        onclick={deleteSelectedUser()}>Supprimer</Button
+      >
       <Button type="secondary" disabled={!selectedRow} onclick={gotoEditPage}
         >Editer</Button
       >

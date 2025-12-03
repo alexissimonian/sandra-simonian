@@ -1,6 +1,6 @@
 <script lang="ts">
   import favicon from "$lib/assets/favicon.svg";
-  import { Willow as WillowCore } from "@svar-ui/svelte-core";
+  import { Globals, Willow as WillowCore } from "@svar-ui/svelte-core";
   import { Willow as WillowGrid } from "@svar-ui/svelte-grid";
   import "../app.scss";
 
@@ -13,8 +13,10 @@
 
 <WillowCore>
   <WillowGrid>
-    <div class="app-wrapper">
-      {@render children()}
-    </div>
+    <Globals>
+      <div class="app-wrapper">
+        {@render children()}
+      </div>
+    </Globals>
   </WillowGrid>
 </WillowCore>
