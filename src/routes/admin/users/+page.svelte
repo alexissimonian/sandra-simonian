@@ -98,9 +98,11 @@
     justify-content: flex-end;
     width: 100%;
     gap: 1rem;
+    padding: 0 1rem;
   }
 
   .grid-container {
     width: 100%;
+    padding: 1rem;
   }
 </style>
