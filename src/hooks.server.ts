@@ -1,6 +1,10 @@
 import { env as publicEnv } from '$env/dynamic/public'
+import { handleError } from '$lib/errors/errorHandler'
 import { createServerClient } from '@supabase/ssr'
 import type { Handle } from '@sveltejs/kit'
+import { redirect } from '@sveltejs/kit'
+import type { Profile } from '$lib/types'
+import { getUserProfile } from '$lib/server/services/user/userRequest'
 
 export const handle: Handle = async ({ event, resolve }) => {
   event.locals.supabase = createServerClient(publicEnv.PUBLIC_SUPABASE_URL, publicEnv.PUBLIC_SUPABASE_PUBLISHABLE_KEY, {
@@ -47,6 +51,33 @@ export const handle: Handle = async ({ event, resolve }) => {
     return { session, user }
   }
 
+  const publicRoutes = ["/login", "/logout"];
+  const isRouteProtected = !publicRoutes.includes(event.url.pathname);
+  const { user } = await event.locals.safeGetSession();
+
+  if (isRouteProtected && !user) {
+    if (event.request.method !== "GET") {
+      return new Response(JSON.stringify({ error: "unauthorized" }), { status: 401, headers: { "Content-Type": "application/json" } });
+    }
+    throw redirect(303, "/login");
+  }
+
+  let profile: Profile | undefined = undefined;
+  if (user) {
+    try {
+      profile = await getUserProfile(event.locals.supabase);
+      event.locals.profile = profile;
+    } catch (error) {
+      handleError(error);
+    }
+  }
+
+  if (event.url.pathname.startsWith("/admin") && profile?.role !== "admin") {
+    if (event.request.method !== "GET") {
+      return new Response(JSON.stringify({ error: "unauthorized" }), { status: 401, headers: { "Content-Type": "application/json" } });
+    }
+    throw redirect(303, "/app");
+  }
 
   return resolve(event, {
     filterSerializedResponseHeaders(name) {
