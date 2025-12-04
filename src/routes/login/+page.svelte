@@ -3,7 +3,6 @@
   import Button from "$lib/components/Button.svelte";
   import { sendFormData, validateEmailField } from "$lib/utils/form";
   import { Text, Field } from "@svar-ui/svelte-core";
-  import { text } from "@sveltejs/kit";
   import { getContext } from "svelte";
   const { showNotice } = getContext<any>("wx-helpers");
 
@@ -12,12 +11,15 @@
   let email = $state("");
   let code = $state("");
   let isCodeError = $state(false);
+  let isEmailValidation = $state(false);
+  let isCodeValidation = $state(false);
 
   function goBackToEmail() {
     currentStep = "email";
   }
 
   async function validateEmailForm() {
+    isEmailValidation = true;
     isEmailError = !validateEmailField(email);
     if (!isEmailError) {
       const formData = new FormData();
@@ -30,6 +32,7 @@
           expire: 6000,
           text: "Email envoyé !",
         });
+        isEmailValidation = false;
       } else {
         isEmailError = true;
         const message = await response.json();
@@ -38,6 +41,7 @@
           expire: 6000,
           text: message.error.message ?? "Un problème est survenu.",
         });
+        isEmailValidation = false;
       }
     } else {
       showNotice({
@@ -45,6 +49,7 @@
         expire: 6000,
         text: "Veuillez entrer un email valide.",
       });
+      isEmailValidation = false;
     }
   }
 
@@ -54,6 +59,7 @@
   }
 
   async function validateCodeForm() {
+    isCodeValidation = true;
     isCodeError = !validateCodeField();
     if (!isCodeError) {
       const formData = new FormData();
@@ -70,6 +76,8 @@
           expire: 6000,
           text: message.error.message ?? "Un problème est survenu.",
         });
+
+        isCodeValidation = false;
       }
     } else {
       showNotice({
@@ -77,6 +85,7 @@
         expire: 6000,
         text: "Le code est composé de 8 chiffres.",
       });
+      isCodeValidation = false;
     }
   }
 </script>
@@ -93,12 +102,16 @@
             error={isEmailError}
             onchange={() => (isEmailError = false)}
             placeholder="votre@email.com"
+            disabled={isEmailValidation}
           />
         {/snippet}
       </Field>
     </form>
-    <Button type="primary" onclick={() => validateEmailForm()}
-      >Me connecter</Button
+    <Button
+      type="primary"
+      disabled={isEmailValidation}
+      onclick={() => validateEmailForm()}
+      >{isEmailValidation ? "Chargement..." : "Me connecter"}</Button
     >
   {/if}
 
@@ -112,14 +125,22 @@
             error={isCodeError}
             onchange={() => (isCodeError = false)}
             placeholder="00000000"
+            disabled={isCodeValidation}
           />
         {/snippet}
       </Field>
     </form>
     <div class="code-validation-buttons">
-      <Button type="primary" onclick={() => validateCodeForm()}>Entrer</Button>
-      <Button type="link" onclick={() => goBackToEmail()}
-        >Changer l'email d'envoi</Button
+      <Button
+        type="primary"
+        disabled={isCodeValidation}
+        onclick={() => validateCodeForm()}
+        >{isCodeValidation ? "Chargement..." : "Entrer"}</Button
+      >
+      <Button
+        type="link"
+        disabled={isCodeValidation}
+        onclick={() => goBackToEmail()}>Changer l'email d'envoi</Button
       >
     </div>
   {/if}
