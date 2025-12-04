@@ -1,6 +1,7 @@
-import { fail, redirect, type Actions } from "@sveltejs/kit";
+import { redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { error } from "@sveltejs/kit";
+import { validateEmailField } from "$lib/utils";
 
 export const load: PageServerLoad = async ({ locals }) => {
   const profile = locals.profile;
@@ -18,6 +19,10 @@ export const actions: Actions = {
     const data = await request.formData();
     const email = data.get("email") as string;
 
+    if (!validateEmailField(email)) {
+      throw error(400, "Veuillez entrer un email valide.");
+    }
+
     const { error: emailError } = await locals.supabase.auth.signInWithOtp({
       email
     });
@@ -33,6 +38,10 @@ export const actions: Actions = {
     const code = formData.get("code") as string;
     const email = formData.get("email") as string;
 
+    if (!validateCodeField(code)) {
+      throw error(400, "Le code est composé de 8 digits.");
+    }
+
     const { data, error: codeError } = await locals.supabase.auth.verifyOtp({
       email,
       token: code,
@@ -45,4 +54,9 @@ export const actions: Actions = {
 
     return { connected: true };
   }
-} 
+}
+
+function validateCodeField(code: string): boolean {
+  const regex = /\d{8}/;
+  return regex.test(code);
+}

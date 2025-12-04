@@ -1,6 +1,6 @@
-import { AppError } from "$lib/errors/errorHandler";
 import { supabaseAdminClient } from "$lib/server/db/adminClient";
 import type { Profile } from "$lib/types";
+import { error } from "@sveltejs/kit";
 
 export async function createUserProfile(email: string, lastname: string, firstname: string): Promise<Profile> {
   // Créer l'utilisateur dans auth.users
@@ -11,7 +11,7 @@ export async function createUserProfile(email: string, lastname: string, firstna
 
   if (authError || !authUser.user) {
     console.error(authError?.message);
-    throw new AppError(`Erreur lors de la création de l'utilisateur: ${authError?.message}`);
+    throw error(500, "Erreur lors de la création de l'utilisateur");
   }
 
   // Créer le profil dans la table profiles
@@ -28,7 +28,7 @@ export async function createUserProfile(email: string, lastname: string, firstna
 
   if (profileError || !profile) {
     console.error(profileError?.message);
-    throw new AppError(`Erreur lors de la création du profile: ${profileError?.message}`);
+    throw error(500, "Erreur lors de la création du profile");
   }
 
   return {
