@@ -3,14 +3,19 @@
   import { Grid } from "@svar-ui/svelte-grid";
   import type { PageData } from "./$types";
   import SelectionCheckboxCell from "$lib/components/grid/SelectionCheckboxCell.svelte";
-  import { goto } from "$app/navigation";
+  import { goto, invalidateAll } from "$app/navigation";
   import { page } from "$app/state";
   import { getContext } from "svelte";
-  const { showNotice } = getContext<any>("wx-helpers");
+  import { sendFormData } from "$lib/utils";
+  const { showNotice, showModal } = getContext<any>("wx-helpers");
+  import type { Profile } from "$lib/types";
 
   let { data }: { data: PageData } = $props();
 
-  let gridData: any[] = data.profiles;
+  let isDeletion = $state(false);
+  let hasEngagingInteraction = $derived(isDeletion);
+
+  let gridData: Profile[] = $derived(data.profiles);
   let gridColumns: any[] = [
     {
       id: "select",
@@ -45,7 +50,7 @@
   ];
 
   let api = $state<any>();
-  let selectedRow = $state<string>();
+  let selectedRow = $state<string>("");
 
   const updateSelected = () => {
     selectedRow = api.getState().selectedRows[0];
@@ -60,11 +65,36 @@
   };
 
   async function deleteSelectedUser() {
-    showNotice({
-      type: "info",
-      expire: 6000,
-      text: "Utilisateur supprimé !",
-    });
+    try {
+      const selectedProfile = gridData.find((gd) => gd.id === selectedRow);
+      isDeletion = true;
+      await showModal({
+        title: `Es-tu sûre de vouloir supprimer ${selectedProfile?.firstname} ${selectedProfile?.lastname} ?`,
+        message: "Toutes ses données seront définitivement supprimées.",
+      });
+      const selectedUserId = selectedRow;
+      const formData = new FormData();
+      formData.append("userId", selectedUserId);
+      const response = await sendFormData("?/deleteUser", formData);
+      if (response.status === 200) {
+        await invalidateAll();
+        selectedRow = "";
+        showNotice({
+          type: "success",
+          expire: 6000,
+          text: "Utilisateur supprimé !",
+        });
+      } else {
+        const message = await response.json();
+        showNotice({
+          type: "danger",
+          expire: 6000,
+          text: message.error.message,
+        });
+      }
+    } finally {
+      isDeletion = false;
+    }
   }
 </script>
 
@@ -78,13 +108,22 @@
       <h2>Nos Utilisateurs</h2>
     </header>
     <div class="buttons-container">
-      <Button type="danger" disabled={!selectedRow} onclick={deleteSelectedUser}
-        >Supprimer</Button
+      <Button
+        type="danger"
+        disabled={!selectedRow || hasEngagingInteraction}
+        onclick={deleteSelectedUser}
+        >{isDeletion ? "Chargement..." : "Supprimer"}</Button
       >
-      <Button type="secondary" disabled={!selectedRow} onclick={gotoEditPage}
-        >Editer</Button
+      <Button
+        type="secondary"
+        disabled={!selectedRow || hasEngagingInteraction}
+        onclick={gotoEditPage}>Editer</Button
       >
-      <Button type="primary" onclick={gotoCreatePage}>Créer</Button>
+      <Button
+        type="primary"
+        onclick={gotoCreatePage}
+        disabled={hasEngagingInteraction}>Créer</Button
+      >
     </div>
     <div class="grid-container">
       <Grid

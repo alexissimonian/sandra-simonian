@@ -42,3 +42,12 @@ export async function createUserProfile(email: string, lastname: string, firstna
     lastSignInDate: undefined,
   };
 }
+
+export async function deleteUser(id: string): Promise<void> {
+  const { error: deletionError } = await supabaseAdminClient.auth.admin.deleteUser(id);
+
+  if (deletionError) {
+    console.error(deletionError.message);
+    throw error(500, "Impossible de supprimer l'utilisateur...");
+  }
+}
