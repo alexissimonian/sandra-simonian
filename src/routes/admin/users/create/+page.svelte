@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Field, Text, Button } from "@svar-ui/svelte-core";
+  import { Field, Text, Button, DatePicker } from "@svar-ui/svelte-core";
   import {
     notify,
     sendFormData,
@@ -15,6 +15,8 @@
   let email = $state("");
   let isEmailError = $state(false);
   let isCreating = $state(false);
+  let validFromDate = $state(new Date());
+  let validToDate = $state(undefined);
 
   async function validateForm() {
     isCreating = true;
@@ -92,9 +94,34 @@
             />
           {/snippet}
         </Field>
+        <Field label="Valide à partir">
+          {#snippet children(params?: any)}
+            <DatePicker
+              id={params.id}
+              bind:value={validFromDate}
+              format={"%d/%m/%Y"}
+              clear
+            />
+          {/snippet}
+        </Field>
+        <Field label="Valide jusqu'au">
+          {#snippet children(params?: any)}
+            <DatePicker
+              id={params.id}
+              bind:value={validToDate}
+              format={"%d/%m/%Y"}
+              clear
+            />
+          {/snippet}
+        </Field>
       </form>
       <Button type="primary" onclick={validateForm} disabled={isCreating}
         >{isCreating ? "Chargement..." : "Créer"}</Button
+      >
+      <Button
+        type="secondary"
+        onclick={() => goto("/admin/users")}
+        disabled={isCreating}>Annuler</Button
       >
     </div>
   </section>
