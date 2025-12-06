@@ -24,6 +24,7 @@ export const actions: Actions = {
     try {
       await deleteUser(userId);
     } catch (deletionError) {
+      console.error(deletionError);
       if (isHttpError(deletionError)) {
         throw error(deletionError.status, deletionError.body.message);
       };

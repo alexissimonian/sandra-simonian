@@ -1,4 +1,4 @@
-import { redirect, type Actions } from "@sveltejs/kit";
+import { isHttpError, type Actions } from "@sveltejs/kit";
 import { validateEmailField, validateNameField } from "$lib/utils";
 import { createUserProfile } from "$lib/server/services/adminUser/adminUserCommand";
 import { error } from "@sveltejs/kit";
@@ -16,16 +16,15 @@ export const actions: Actions = {
 
     if (isLastnameValidated && isFirstnameValidated && isEmailValidated) {
       try {
-        const newProfile = await createUserProfile(email.toLocaleLowerCase(), lastname.toLocaleLowerCase(), firstname.toLocaleLowerCase());
-        if (newProfile) {
-          throw redirect(303, "/admin/users");
-        }
+        await createUserProfile(email.toLocaleLowerCase(), lastname.toLocaleLowerCase(), firstname.toLocaleLowerCase());
       } catch (profileError) {
         console.error(profileError);
-        throw error(500, "Un problème est survenu lors de la création de l'utilisateur.");
+        if (isHttpError(profileError)) {
+          throw error(profileError.status, "Un problème est survenu lors de la création de l'utilisateur.");
+        }
       }
+    } else {
+      throw error(400, "Echec lors de la validation de l'utilisateur.");
     }
-
-    return error(400, "Echec lors de la validation de l'utilisateur.");
   }
 }

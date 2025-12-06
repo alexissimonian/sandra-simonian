@@ -27,17 +27,15 @@
       if (response.status === 200) {
         currentStep = "code";
         notify("success", "Email envoyé !");
-        isEmailValidation = false;
       } else {
         isEmailError = true;
         const message = await response.json();
         notify("danger", message.error.message ?? "Un problème est survenu...");
-        isEmailValidation = false;
       }
     } else {
       notify("danger", "Veuillez entrer un email valide.");
-      isEmailValidation = false;
     }
+    isEmailValidation = false;
   }
 
   function validateCodeField(): boolean {
@@ -59,12 +57,11 @@
         isCodeError = true;
         const message = await response.json();
         notify("danger", message.error.message ?? "Un problème est survenu...");
-        isCodeValidation = false;
       }
     } else {
       notify("danger", "Le code est composé de 8 chiffres.");
-      isCodeValidation = false;
     }
+    isCodeValidation = false;
   }
 </script>
 
@@ -73,10 +70,10 @@
   {#if currentStep === "email"}
     <form>
       <Field label="Email" error={isEmailError} required>
-        {#snippet children({ id })}
+        {#snippet children(params?: any)}
           <Text
             bind:value={email}
-            {id}
+            id={params.id}
             error={isEmailError}
             onchange={() => (isEmailError = false)}
             placeholder="votre@email.com"
@@ -96,10 +93,10 @@
   {#if currentStep === "code"}
     <form>
       <Field label="Code" error={isCodeError} required>
-        {#snippet children({ id })}
+        {#snippet children(params?: any)}
           <Text
             bind:value={code}
-            {id}
+            id={params.id}
             error={isCodeError}
             onchange={() => (isCodeError = false)}
             placeholder="00000000"

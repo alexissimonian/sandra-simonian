@@ -6,6 +6,7 @@
     validateEmailField,
     validateNameField,
   } from "$lib/utils";
+  import { goto } from "$app/navigation";
 
   let lastname = $state("");
   let isLastnameError = $state(false);
@@ -13,19 +14,37 @@
   let isFirstnameError = $state(false);
   let email = $state("");
   let isEmailError = $state(false);
+  let isCreating = $state(false);
 
   async function validateForm() {
-    isLastnameError = !validateNameField(lastname);
-    isFirstnameError = !validateNameField(firstname);
-    isEmailError = !validateEmailField(email);
-    notify("info", "hello");
+    isCreating = true;
+    if ((isLastnameError = !validateNameField(lastname)))
+      notify(
+        "warning",
+        "Un nom de famille doit avoir au moins deux caractères !",
+      );
+    if ((isFirstnameError = !validateNameField(firstname)))
+      notify("warning", "Un prénom doit avoir au moins deux caractères !");
+    if ((isEmailError = !validateEmailField(email)))
+      notify("warning", "Il faut entrer un email valide.");
     if (!isLastnameError && !isFirstnameError && !isEmailError) {
       const formData = new FormData();
       formData.append("lastname", lastname);
       formData.append("firstname", firstname);
       formData.append("email", email);
-      await sendFormData("?/create", formData);
+      const response = await sendFormData("?/create", formData);
+      if (response.status === 200) {
+        notify("success", "utilisateur créé !");
+        lastname = "";
+        firstname = "";
+        email = "";
+        goto("/admin/users");
+      } else {
+        const message = await response.json();
+        notify("danger", message.error.message ?? "Un problème est survenu...");
+      }
     }
+    isCreating = false;
   }
 </script>
 
@@ -41,50 +60,42 @@
     <div>
       <form>
         <Field label="Nom" error={isLastnameError} required>
-          {#snippet children({ id })}
+          {#snippet children(params?: any)}
             <Text
               bind:value={lastname}
-              {id}
+              id={params.id}
               error={isLastnameError}
               onchange={() => (isLastnameError = false)}
+              disabled={isCreating}
             />
           {/snippet}
         </Field>
         <Field label="Prénom" error={isFirstnameError} required>
-          {#snippet children({ id })}
+          {#snippet children(params?: any)}
             <Text
               bind:value={firstname}
-              {id}
+              id={params.id}
               error={isFirstnameError}
               onchange={() => (isFirstnameError = false)}
+              disabled={isCreating}
             />
           {/snippet}
         </Field>
         <Field label="Email" error={isEmailError} required>
-          {#snippet children({ id })}
+          {#snippet children(params?: any)}
             <Text
               bind:value={email}
-              {id}
+              id={params.id}
               error={isEmailError}
               onchange={() => (isEmailError = false)}
+              disabled={isCreating}
             />
           {/snippet}
         </Field>
       </form>
-      <div>
-        {#if isLastnameError}
-          <p class="error-message">
-            Un nom de famille doit avoir au moins deux caractères.
-          </p>
-        {:else if isFirstnameError}
-          <p class="error-message">
-            Un prénom doit avoir au moins deux caractères.
-          </p>
-        {:else if isEmailError}
-          <p class="error-message">Cet email n'est pas valide.</p>
-        {/if}
-      </div>
-      <Button type="primary" onclick={() => validateForm()}>Créer</Button>
+      <Button type="primary" onclick={validateForm} disabled={isCreating}
+        >{isCreating ? "Chargement..." : "Créer"}</Button
+      >
     </div>
   </section>
 </div>

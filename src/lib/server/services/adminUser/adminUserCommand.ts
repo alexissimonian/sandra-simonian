@@ -3,7 +3,6 @@ import type { Profile } from "$lib/types";
 import { error } from "@sveltejs/kit";
 
 export async function createUserProfile(email: string, lastname: string, firstname: string): Promise<Profile> {
-  // Créer l'utilisateur dans auth.users
   const { data: authUser, error: authError } = await supabaseAdminClient.auth.admin.createUser({
     email,
     email_confirm: true,
@@ -11,10 +10,9 @@ export async function createUserProfile(email: string, lastname: string, firstna
 
   if (authError || !authUser.user) {
     console.error(authError?.message);
-    throw error(500, "Erreur lors de la création de l'utilisateur");
+    throw error(500, authError?.message ?? "Erreur à la création de l'utilisateur !");
   }
 
-  // Créer le profil dans la table profiles
   const { data: profile, error: profileError } = await supabaseAdminClient
     .from('profiles')
     .insert({
@@ -28,7 +26,7 @@ export async function createUserProfile(email: string, lastname: string, firstna
 
   if (profileError || !profile) {
     console.error(profileError?.message);
-    throw error(500, "Erreur lors de la création du profile");
+    throw error(500, profileError?.message ?? "Erreur à la création du profil");
   }
 
   return {
