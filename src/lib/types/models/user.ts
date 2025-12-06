@@ -7,8 +7,9 @@ export interface Profile {
   email: string;
   role: string;
   createDate: string;
-  memberSince?: string;
   lastSignInDate?: string;
+  validFrom?: string;
+  validTo?: string;
 }
 
 export type ProfileRow = Tables<'profiles'>;

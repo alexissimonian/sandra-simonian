@@ -133,8 +133,9 @@ export type Database = {
           id: string
           last_sign_in_at: string | null
           lastname: string
-          memberSince: string | null
           role: string
+          validFrom: string | null
+          validTo: string | null
         }
         Insert: {
           created_at?: string
@@ -143,8 +144,9 @@ export type Database = {
           id: string
           last_sign_in_at?: string | null
           lastname: string
-          memberSince?: string | null
           role?: string
+          validFrom?: string | null
+          validTo?: string | null
         }
         Update: {
           created_at?: string
@@ -153,8 +155,9 @@ export type Database = {
           id?: string
           last_sign_in_at?: string | null
           lastname?: string
-          memberSince?: string | null
           role?: string
+          validFrom?: string | null
+          validTo?: string | null
         }
         Relationships: []
       }

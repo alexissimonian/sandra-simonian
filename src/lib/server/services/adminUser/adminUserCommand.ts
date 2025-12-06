@@ -36,8 +36,9 @@ export async function createUserProfile(email: string, lastname: string, firstna
     email: profile.email,
     role: profile.role,
     createDate: profile.created_at,
-    memberSince: undefined,
     lastSignInDate: undefined,
+    validFrom: profile.validFrom,
+    validTo: profile.validTo
   };
 }
 

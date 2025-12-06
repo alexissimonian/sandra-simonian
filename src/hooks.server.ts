@@ -1,8 +1,7 @@
 import { env as publicEnv } from '$env/dynamic/public'
-import { handleError } from '$lib/errors/errorHandler'
 import { createServerClient } from '@supabase/ssr'
 import type { Handle } from '@sveltejs/kit'
-import { redirect } from '@sveltejs/kit'
+import { error, redirect } from '@sveltejs/kit'
 import type { Profile } from '$lib/types'
 import { getUserProfile } from '$lib/server/services/user/userRequest'
 
@@ -67,8 +66,9 @@ export const handle: Handle = async ({ event, resolve }) => {
     try {
       profile = await getUserProfile(event.locals.supabase);
       event.locals.profile = profile;
-    } catch (error) {
-      handleError(error);
+    } catch (profileError) {
+      console.error(profileError);
+      throw error(500, "Nous n'avons pas pu récupérer le profil.");
     }
   }
 

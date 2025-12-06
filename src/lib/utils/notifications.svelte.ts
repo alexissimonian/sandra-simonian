@@ -8,9 +8,14 @@ export function notify(severity: "info" | "danger" | "warning" | "success", mess
   })
 }
 
-export async function verify(title: string, message: string): Promise<void> {
-  await notificationHelper.showModal({
-    title: title,
-    message: message
-  })
+export async function verify(title: string, message: string): Promise<boolean> {
+  try {
+    await notificationHelper.showModal({
+      title: title,
+      message: message
+    })
+    return true;
+  } catch (error) {
+    return false;
+  }
 }

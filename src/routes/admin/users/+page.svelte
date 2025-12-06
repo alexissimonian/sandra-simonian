@@ -34,16 +34,22 @@
       id: "lastSignInDate",
       header: "Dernière Connexion",
       flexgrow: 1,
+      template: (v: string) =>
+        v ? new Date(v).toLocaleDateString() : "Jamais connecté.",
     },
     {
       id: "validFrom",
       header: "Valide à Partir de",
       flexgrow: 1,
+      template: (v: string) =>
+        v ? new Date(v).toLocaleDateString("fr") : "Non spécifié.",
     },
     {
       id: "validTo",
       header: "Valide Jusqu'au",
       flexgrow: 1,
+      template: (v: string) =>
+        v ? new Date(v).toLocaleDateString() : "Non spécifié.",
     },
     {
       id: "edit",
@@ -56,8 +62,6 @@
       width: 50,
     },
   ];
-
-  let api = $state<any>();
 
   const gotoEditPage = (id: string) => {
     goto(`${page.url.pathname}/edit/${id}`);
@@ -72,10 +76,11 @@
       const selectedProfile = gridData.find((gd) => gd.id === id);
       if (!selectedProfile) return;
       isDeletion = true;
-      await verify(
+      const isConfirmed = await verify(
         `Es-tu sûre de vouloir supprimer ${selectedProfile.firstname} ${selectedProfile.lastname} ?`,
         "Ses données seront supprimées définitivement.",
       );
+      if (!isConfirmed) return;
       const formData = new FormData();
       formData.append("userId", selectedProfile.id);
       const response = await sendFormData("?/deleteUser", formData);
@@ -119,7 +124,6 @@
     </div>
     <div class="grid-container">
       <Grid
-        bind:this={api}
         data={gridData}
         columns={gridColumns}
         multiselect={false}
