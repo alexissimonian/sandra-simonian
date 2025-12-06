@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Field, Text, Button } from "@svar-ui/svelte-core";
   import {
+    notify,
     sendFormData,
     validateEmailField,
     validateNameField,
@@ -17,6 +18,7 @@
     isLastnameError = !validateNameField(lastname);
     isFirstnameError = !validateNameField(firstname);
     isEmailError = !validateEmailField(email);
+    notify("info", "hello");
     if (!isLastnameError && !isFirstnameError && !isEmailError) {
       const formData = new FormData();
       formData.append("lastname", lastname);
