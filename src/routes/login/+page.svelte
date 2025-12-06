@@ -1,10 +1,9 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import Button from "$lib/components/Button.svelte";
+  import { notify } from "$lib/utils";
   import { sendFormData, validateEmailField } from "$lib/utils/form";
   import { Text, Field } from "@svar-ui/svelte-core";
-  import { getContext } from "svelte";
-  const { showNotice } = getContext<any>("wx-helpers");
 
   let currentStep = $state("email");
   let isEmailError = $state(false);
@@ -27,28 +26,16 @@
       const response = await sendFormData("?/login", formData);
       if (response.status === 200) {
         currentStep = "code";
-        showNotice({
-          type: "success",
-          expire: 6000,
-          text: "Email envoyé !",
-        });
+        notify("success", "Email envoyé !");
         isEmailValidation = false;
       } else {
         isEmailError = true;
         const message = await response.json();
-        showNotice({
-          type: "danger",
-          expire: 6000,
-          text: message.error.message ?? "Un problème est survenu.",
-        });
+        notify("danger", message.error.message ?? "Un problème est survenu...");
         isEmailValidation = false;
       }
     } else {
-      showNotice({
-        type: "danger",
-        expire: 6000,
-        text: "Veuillez entrer un email valide.",
-      });
+      notify("danger", "Veuillez entrer un email valide.");
       isEmailValidation = false;
     }
   }
@@ -71,20 +58,11 @@
       } else {
         isCodeError = true;
         const message = await response.json();
-        showNotice({
-          type: "danger",
-          expire: 6000,
-          text: message.error.message ?? "Un problème est survenu.",
-        });
-
+        notify("danger", message.error.message ?? "Un problème est survenu...");
         isCodeValidation = false;
       }
     } else {
-      showNotice({
-        type: "danger",
-        expire: 6000,
-        text: "Le code est composé de 8 chiffres.",
-      });
+      notify("danger", "Le code est composé de 8 chiffres.");
       isCodeValidation = false;
     }
   }

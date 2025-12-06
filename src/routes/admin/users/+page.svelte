@@ -5,9 +5,7 @@
   import SelectionCheckboxCell from "$lib/components/grid/SelectionCheckboxCell.svelte";
   import { goto, invalidateAll } from "$app/navigation";
   import { page } from "$app/state";
-  import { getContext } from "svelte";
-  import { sendFormData } from "$lib/utils";
-  const { showNotice, showModal } = getContext<any>("wx-helpers");
+  import { notify, sendFormData, verify } from "$lib/utils";
   import type { Profile } from "$lib/types";
 
   let { data }: { data: PageData } = $props();
@@ -67,11 +65,12 @@
   async function deleteSelectedUser() {
     try {
       const selectedProfile = gridData.find((gd) => gd.id === selectedRow);
+      if (!selectedProfile) return;
       isDeletion = true;
-      await showModal({
-        title: `Es-tu sûre de vouloir supprimer ${selectedProfile?.firstname} ${selectedProfile?.lastname} ?`,
-        message: "Toutes ses données seront définitivement supprimées.",
-      });
+      await verify(
+        `Es-tu sûre de vouloir supprimer ${selectedProfile.firstname} ${selectedProfile.lastname} ?`,
+        "Ses données seront supprimées définitivement.",
+      );
       const selectedUserId = selectedRow;
       const formData = new FormData();
       formData.append("userId", selectedUserId);
@@ -79,18 +78,10 @@
       if (response.status === 200) {
         await invalidateAll();
         selectedRow = "";
-        showNotice({
-          type: "success",
-          expire: 6000,
-          text: "Utilisateur supprimé !",
-        });
+        notify("success", "Utilisateur supprimé !");
       } else {
         const message = await response.json();
-        showNotice({
-          type: "danger",
-          expire: 6000,
-          text: message.error.message,
-        });
+        notify("danger", message.error.message ?? "Un problème est survenu...");
       }
     } finally {
       isDeletion = false;

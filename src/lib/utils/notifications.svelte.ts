@@ -7,3 +7,10 @@ export function notify(severity: "info" | "danger" | "warning" | "success", mess
     text: message
   })
 }
+
+export async function verify(title: string, message: string): Promise<void> {
+  await notificationHelper.showModal({
+    title: title,
+    message: message
+  })
+}
