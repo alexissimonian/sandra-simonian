@@ -1,12 +1,12 @@
 <script lang="ts">
-  import Button from "$lib/components/Button.svelte";
+  import { Button } from "@svar-ui/svelte-core";
   import { Grid } from "@svar-ui/svelte-grid";
   import type { PageData } from "./$types";
-  import SelectionCheckboxCell from "$lib/components/grid/SelectionCheckboxCell.svelte";
   import { goto, invalidateAll } from "$app/navigation";
   import { page } from "$app/state";
   import { notify, sendFormData, verify } from "$lib/utils";
   import type { Profile } from "$lib/types";
+  import CustomButtonCell from "$lib/components/grid/CustomButtonCell.svelte";
 
   let { data }: { data: PageData } = $props();
 
@@ -15,11 +15,6 @@
 
   let gridData: Profile[] = $derived(data.profiles);
   let gridColumns: any[] = [
-    {
-      id: "select",
-      cell: SelectionCheckboxCell,
-      width: 36,
-    },
     {
       id: "firstname",
       header: "Prénom",
@@ -41,42 +36,51 @@
       flexgrow: 1,
     },
     {
-      id: "role",
-      hidden: true,
+      id: "validFrom",
+      header: "Valide à Partir de",
+      flexgrow: 1,
+    },
+    {
+      id: "validTo",
+      header: "Valide Jusqu'au",
+      flexgrow: 1,
+    },
+    {
+      id: "edit",
+      cell: CustomButtonCell,
+      width: 50,
+    },
+    {
+      id: "delete",
+      cell: CustomButtonCell,
+      width: 50,
     },
   ];
 
   let api = $state<any>();
-  let selectedRow = $state<string>("");
 
-  const updateSelected = () => {
-    selectedRow = api.getState().selectedRows[0];
-  };
-
-  const gotoEditPage = () => {
-    goto(`${page.url.pathname}/edit/${selectedRow}`);
+  const gotoEditPage = (id: string) => {
+    goto(`${page.url.pathname}/edit/${id}`);
   };
 
   const gotoCreatePage = () => {
     goto(`${page.url.pathname}/create`);
   };
 
-  async function deleteSelectedUser() {
+  async function deleteSelectedUser(id: string) {
     try {
-      const selectedProfile = gridData.find((gd) => gd.id === selectedRow);
+      const selectedProfile = gridData.find((gd) => gd.id === id);
       if (!selectedProfile) return;
       isDeletion = true;
       await verify(
         `Es-tu sûre de vouloir supprimer ${selectedProfile.firstname} ${selectedProfile.lastname} ?`,
         "Ses données seront supprimées définitivement.",
       );
-      const selectedUserId = selectedRow;
       const formData = new FormData();
-      formData.append("userId", selectedUserId);
+      formData.append("userId", selectedProfile.id);
       const response = await sendFormData("?/deleteUser", formData);
       if (response.status === 200) {
         await invalidateAll();
-        selectedRow = "";
         notify("success", "Utilisateur supprimé !");
       } else {
         const message = await response.json();
@@ -84,6 +88,14 @@
       }
     } finally {
       isDeletion = false;
+    }
+  }
+
+  function handleGridButtonClicked(ev: any) {
+    if (ev.column === "edit") {
+      gotoEditPage(ev.row);
+    } else if (ev.column === "delete") {
+      deleteSelectedUser(ev.row);
     }
   }
 </script>
@@ -99,29 +111,20 @@
     </header>
     <div class="buttons-container">
       <Button
-        type="danger"
-        disabled={!selectedRow || hasEngagingInteraction}
-        onclick={deleteSelectedUser}
-        >{isDeletion ? "Chargement..." : "Supprimer"}</Button
-      >
-      <Button
-        type="secondary"
-        disabled={!selectedRow || hasEngagingInteraction}
-        onclick={gotoEditPage}>Editer</Button
-      >
-      <Button
         type="primary"
         onclick={gotoCreatePage}
-        disabled={hasEngagingInteraction}>Créer</Button
-      >
+        disabled={hasEngagingInteraction}
+        icon="wxi-plus"
+      />
     </div>
     <div class="grid-container">
       <Grid
         bind:this={api}
         data={gridData}
         columns={gridColumns}
-        select={false}
-        onselectrow={updateSelected}
+        multiselect={false}
+        footer={false}
+        ongridbuttonclicked={(ev) => handleGridButtonClicked(ev)}
       />
     </div>
   </section>
@@ -144,6 +147,10 @@
 
   .grid-container {
     width: 100%;
-    padding: 1rem;
+    padding: 0rem 1rem;
+
+    :global(.wx-grid) {
+      height: auto;
+    }
   }
 </style>
