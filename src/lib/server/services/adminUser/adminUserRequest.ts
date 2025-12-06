@@ -3,8 +3,8 @@ import { generateProfile } from "$lib/server/services/user/userRequest";
 import type { Profile } from "$lib/types";
 import { error } from "@sveltejs/kit";
 
-export async function getAllProfiles(): Promise<Profile[]> {
-  const { data, error: profileError } = await supabaseAdminClient.from("profiles").select("*");
+export async function getAllClientProfiles(): Promise<Profile[]> {
+  const { data, error: profileError } = await supabaseAdminClient.from("profiles").select("*").eq("role", "client");
 
   if (profileError) {
     console.error("Error retreiving profiles: " + profileError.message);

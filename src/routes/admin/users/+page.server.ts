@@ -1,4 +1,4 @@
-import { getAllProfiles } from "$lib/server/services/adminUser/adminUserRequest";
+import { getAllClientProfiles } from "$lib/server/services/adminUser/adminUserRequest";
 import type { Profile } from "$lib/types";
 import type { Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
@@ -8,7 +8,7 @@ import { error, isHttpError } from "@sveltejs/kit";
 export const load: PageServerLoad = async () => {
   let profiles: Profile[] = [];
   try {
-    profiles = await getAllProfiles();
+    profiles = await getAllClientProfiles();
   } catch (error) {
     console.error(error);
   }

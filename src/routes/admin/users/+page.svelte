@@ -19,7 +19,6 @@
       id: "select",
       cell: SelectionCheckboxCell,
       width: 36,
-      disable: { condition: "role", value: "admin" },
     },
     {
       id: "firstname",
