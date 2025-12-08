@@ -1,9 +1,13 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import Button from "$lib/components/Button.svelte";
   import { notify } from "$lib/utils";
   import { sendFormData, validateEmailField } from "$lib/utils/form";
-  import { Text, Field } from "@svar-ui/svelte-core";
+  import { Text, Field, Button } from "@svar-ui/svelte-core";
+  import { getContext } from "svelte";
+  const { showNotice, showModal } = getContext<any>("wx-helpers");
+  import { notificationHelper } from "$lib/utils";
+  notificationHelper.showNotice = showNotice;
+  notificationHelper.showModal = showModal;
 
   let currentStep = $state("email");
   let isEmailError = $state(false);

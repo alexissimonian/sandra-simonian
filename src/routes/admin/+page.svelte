@@ -1,8 +1,8 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
-  import Button from "$lib/components/Button.svelte";
   import type { PageData } from "./$types";
+  import { Button } from "@svar-ui/svelte-core";
 
   export let data: PageData;
 </script>
@@ -15,11 +15,13 @@
 <div class="faux-body">
   <h2>Hello, {data.profile?.firstname}</h2>
   <div class="buttons-containers">
-    <Button onclick={() => goto("/app")}>App</Button>
-    <Button onclick={() => goto(page.url.pathname + "/users")}
+    <Button type="primary" onclick={() => goto("/app")}>App</Button>
+    <Button type="primary" onclick={() => goto(page.url.pathname + "/users")}
       >Utilisateurs</Button
     >
-    <Button onclick={() => goto(page.url.pathname + "/rdv")}>RDV</Button>
+    <Button type="primary" onclick={() => goto(page.url.pathname + "/rdv")}
+      >RDV</Button
+    >
   </div>
 </div>
 
