@@ -7,6 +7,25 @@ export function validateEmailField(email: string): boolean {
   return emailRegex.test(email);
 }
 
+export function validateDateRange(compareDate: Date, minDate?: Date, maxDate?: Date): boolean {
+  let result = true;
+  if (minDate) {
+    result = compareDate.getTime() >= minDate.getTime();
+  }
+
+  if (maxDate) {
+    result = compareDate.getTime() < maxDate.getTime();
+  }
+
+  return result;
+}
+
+export function getComparableTodayDate(): Date {
+  let result = new Date();
+  result.setHours(0, 0, 0, 0);
+  return result;
+}
+
 export async function sendFormData(path: string, formData: FormData): Promise<Response> {
   const response = await fetch(path, {
     method: "POST",
@@ -15,3 +34,4 @@ export async function sendFormData(path: string, formData: FormData): Promise<Re
 
   return response;
 }
+

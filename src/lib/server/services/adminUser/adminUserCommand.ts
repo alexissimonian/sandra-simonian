@@ -2,7 +2,7 @@ import { supabaseAdminClient } from "$lib/server/db/adminClient";
 import type { Profile } from "$lib/types";
 import { error } from "@sveltejs/kit";
 
-export async function createUserProfile(email: string, lastname: string, firstname: string): Promise<Profile> {
+export async function createUserProfile(email: string, lastname: string, firstname: string, validFromDate?: Date, validToDate?: Date): Promise<Profile> {
   const { data: authUser, error: authError } = await supabaseAdminClient.auth.admin.createUser({
     email,
     email_confirm: true,
@@ -20,6 +20,8 @@ export async function createUserProfile(email: string, lastname: string, firstna
       email,
       firstname: firstname,
       lastname: lastname,
+      validFrom: validFromDate?.toISOString() ?? null,
+      validTo: validToDate?.toISOString() ?? null
     })
     .select()
     .single();

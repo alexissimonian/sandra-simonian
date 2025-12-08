@@ -5,6 +5,8 @@
     sendFormData,
     validateEmailField,
     validateNameField,
+    getComparableTodayDate,
+    validateDateRange,
   } from "$lib/utils";
   import { goto } from "$app/navigation";
 
@@ -15,8 +17,10 @@
   let email = $state("");
   let isEmailError = $state(false);
   let isCreating = $state(false);
-  let validFromDate = $state(new Date());
-  let validToDate = $state(undefined);
+  let validFromDate = $state(getComparableTodayDate());
+  let validToDate: Date | undefined = $state(undefined);
+  let isValidFromDateError = $state(false);
+  let isValidToDateError = $state(false);
 
   async function validateForm() {
     isCreating = true;
@@ -29,11 +33,48 @@
       notify("warning", "Un prénom doit avoir au moins deux caractères !");
     if ((isEmailError = !validateEmailField(email)))
       notify("warning", "Il faut entrer un email valide.");
-    if (!isLastnameError && !isFirstnameError && !isEmailError) {
+    if (
+      validFromDate &&
+      (isValidFromDateError = !validateDateRange(
+        validFromDate,
+        getComparableTodayDate(),
+      ))
+    )
+      notify(
+        "warning",
+        "La date de début de validité ne peut pas être antérieure à aujourd'hui.",
+      );
+    if (!validFromDate && validToDate) {
+      isValidToDateError = true;
+      notify(
+        "warning",
+        "Une date de début de validité doit être renseignée si l'on renseigne la date de fin de validité.",
+      );
+    }
+    if (
+      !isValidToDateError &&
+      validToDate &&
+      (isValidToDateError = !validateDateRange(validToDate, validFromDate))
+    )
+      notify(
+        "warning",
+        "La date de fin de validité ne peut pas être antérieure à la date de début de validité.",
+      );
+    if (
+      !isLastnameError &&
+      !isFirstnameError &&
+      !isEmailError &&
+      !isValidFromDateError &&
+      !isValidToDateError
+    ) {
       const formData = new FormData();
       formData.append("lastname", lastname);
       formData.append("firstname", firstname);
       formData.append("email", email);
+      if (validFromDate)
+        formData.append("validFromDate", validFromDate.toDateString());
+      if (validToDate)
+        formData.append("validToDate", validToDate.toDateString());
       const response = await sendFormData("?/create", formData);
       if (response.status === 200) {
         notify("success", "utilisateur créé !");
@@ -100,6 +141,11 @@
               id={params.id}
               bind:value={validFromDate}
               format={"%d/%m/%Y"}
+              onchange={() => {
+                isValidFromDateError = false;
+                isValidToDateError = false;
+              }}
+              error={isValidFromDateError}
               clear
             />
           {/snippet}
@@ -110,6 +156,11 @@
               id={params.id}
               bind:value={validToDate}
               format={"%d/%m/%Y"}
+              onchange={() => {
+                isValidFromDateError = false;
+                isValidToDateError = false;
+              }}
+              error={isValidToDateError}
               clear
             />
           {/snippet}
