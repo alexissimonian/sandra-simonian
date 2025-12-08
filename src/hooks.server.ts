@@ -4,6 +4,7 @@ import type { Handle } from '@sveltejs/kit'
 import { error, redirect } from '@sveltejs/kit'
 import type { Profile } from '$lib/types'
 import { getUserProfile } from '$lib/server/services/user/userRequest'
+import { validateDateRange } from '$lib/utils'
 
 export const handle: Handle = async ({ event, resolve }) => {
   event.locals.supabase = createServerClient(publicEnv.PUBLIC_SUPABASE_URL, publicEnv.PUBLIC_SUPABASE_PUBLISHABLE_KEY, {
@@ -70,6 +71,16 @@ export const handle: Handle = async ({ event, resolve }) => {
       console.error(profileError);
       throw error(500, "Nous n'avons pas pu récupérer le profil.");
     }
+  }
+
+  if (isRouteProtected && profile?.validFrom) {
+    const validFromDate = new Date(profile?.validFrom);
+    if (!validateDateRange(new Date(), validFromDate)) throw error(401, "Ce profil n'est pas encore valide.");
+  }
+
+  if (isRouteProtected && profile?.validTo) {
+    const validToDate = new Date(profile?.validTo);
+    if (!validateDateRange(new Date(), undefined, validToDate)) throw error(401, "Ce profil n'est plus valide.");
   }
 
   if (event.url.pathname.startsWith("/admin") && profile?.role !== "admin") {
