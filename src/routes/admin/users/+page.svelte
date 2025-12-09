@@ -35,7 +35,7 @@
       header: "Dernière Connexion",
       flexgrow: 1,
       template: (v: string) =>
-        v ? new Date(v).toLocaleDateString() : "Jamais connecté.",
+        v ? new Date(v).toLocaleDateString("fr") : "Jamais connecté.",
     },
     {
       id: "validFrom",
@@ -49,7 +49,7 @@
       header: "Valide Jusqu'au",
       flexgrow: 1,
       template: (v: string) =>
-        v ? new Date(v).toLocaleDateString() : "Non spécifié.",
+        v ? new Date(v).toLocaleDateString("fr") : "Non spécifié.",
     },
     {
       id: "edit",
