@@ -2,6 +2,8 @@ import { redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { error } from "@sveltejs/kit";
 import { validateEmailField } from "$lib/utils";
+import { getValidDatesForEmail } from "$lib/server/services/adminUser/adminUserRequest";
+import { validateDateRange } from "$lib/utils";
 
 export const load: PageServerLoad = async ({ locals }) => {
   const profile = locals.profile;
@@ -21,6 +23,21 @@ export const actions: Actions = {
 
     if (!validateEmailField(email)) {
       throw error(400, "Veuillez entrer un email valide.");
+    }
+
+    const { validFromString, validToString, error: validDateError } = await getValidDatesForEmail(email);
+
+    if (validDateError) {
+      console.error(validDateError);
+      throw error(400, "Impossible de trouver cet email");
+    }
+
+    if (validFromString) {
+      if (!validateDateRange(new Date(), new Date(validFromString))) throw error(401, "Ce profil n'est pas encore valide.");
+    }
+
+    if (validToString) {
+      if (!validateDateRange(new Date(), undefined, new Date(validToString))) throw error(401, "Ce profil n'est plus valide.");
     }
 
     const { error: emailError } = await locals.supabase.auth.signInWithOtp({

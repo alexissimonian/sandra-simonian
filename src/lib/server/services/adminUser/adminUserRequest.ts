@@ -15,3 +15,12 @@ export async function getAllClientProfiles(): Promise<Profile[]> {
 
   return profiles;
 }
+
+export async function getValidDatesForEmail(email: string): Promise<{ validFromString: Date, validToString: Date, error: any }> {
+  const { data, error: validDateError } = await supabaseAdminClient.from("profiles").select("validFrom, validTo").eq("email", email).single();
+  if (validDateError) {
+    console.error(validDateError);
+  }
+
+  return { validFromString: data?.validFrom, validToString: data?.validTo, error: validDateError }
+}
