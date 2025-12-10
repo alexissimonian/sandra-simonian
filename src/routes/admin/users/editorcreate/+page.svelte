@@ -7,8 +7,15 @@
     validateNameField,
     getComparableTodayDate,
     validateDateRange,
+    capitalize,
   } from "$lib/utils";
   import { goto } from "$app/navigation";
+  import type { PageData } from "./$types";
+  import { onMount } from "svelte";
+
+  let { data }: { data: PageData } = $props();
+
+  let pageMode = data.mode;
 
   let lastname = $state("");
   let isLastnameError = $state(false);
@@ -17,10 +24,29 @@
   let email = $state("");
   let isEmailError = $state(false);
   let isCreating = $state(false);
-  let validFromDate = $state(getComparableTodayDate());
+  let validFromDate: Date | undefined = $state(getComparableTodayDate());
   let validToDate: Date | undefined = $state(undefined);
   let isValidFromDateError = $state(false);
   let isValidToDateError = $state(false);
+
+  onMount(() => {
+    if (pageMode === "edit") {
+      if (!data.user) {
+        notify("danger", "Le profil n'est pas chargé dans cette page !");
+        goto("/admin/users");
+      } else {
+        firstname = capitalize(data.user.firstname);
+        lastname = capitalize(data.user.lastname);
+        email = data.user.email;
+        validFromDate = data.user.validFrom
+          ? new Date(data.user.validFrom)
+          : undefined;
+        validToDate = data.user.validTo
+          ? new Date(data.user.validTo)
+          : undefined;
+      }
+    }
+  });
 
   async function validateForm() {
     isCreating = true;
@@ -34,6 +60,7 @@
     if ((isEmailError = !validateEmailField(email)))
       notify("warning", "Il faut entrer un email valide.");
     if (
+      data.mode === "create" &&
       validFromDate &&
       (isValidFromDateError = !validateDateRange(
         validFromDate,
@@ -44,21 +71,16 @@
         "warning",
         "La date de début de validité ne peut pas être antérieure à aujourd'hui.",
       );
-    if (!validFromDate && validToDate) {
-      isValidToDateError = true;
-      notify(
-        "warning",
-        "Une date de début de validité doit être renseignée si l'on renseigne la date de fin de validité.",
-      );
-    }
     if (
-      !isValidToDateError &&
       validToDate &&
-      (isValidToDateError = !validateDateRange(validToDate, validFromDate))
+      (isValidToDateError = !validateDateRange(
+        validToDate,
+        validFromDate ?? getComparableTodayDate(),
+      ))
     )
       notify(
         "warning",
-        "La date de fin de validité ne peut pas être antérieure à la date de début de validité.",
+        "La date de fin de validité ne peut pas être antérieure à la date de début de validité ou aujourd'hui.",
       );
     if (
       !isLastnameError &&
@@ -75,9 +97,12 @@
         formData.append("validFromDate", validFromDate.toDateString());
       if (validToDate)
         formData.append("validToDate", validToDate.toDateString());
-      const response = await sendFormData("?/create", formData);
+      const response = await sendFormData(`?/${pageMode}`, formData);
       if (response.status === 200) {
-        notify("success", "utilisateur créé !");
+        notify(
+          "success",
+          `Utilisateur ${pageMode === "edit" ? "modifié" : "créé"} !`,
+        );
         lastname = "";
         firstname = "";
         email = "";
@@ -92,13 +117,15 @@
 </script>
 
 <svelte:head>
-  <title>Admin - Créer un utilisateur</title>
+  <title
+    >Admin - {pageMode === "edit" ? "Modifier" : "Créer"} un utilisateur</title
+  >
 </svelte:head>
 
 <div class="faux-body">
   <section>
     <header>
-      <h2>Créer un utilisateur</h2>
+      <h2>{pageMode === "edit" ? "Modifier" : "Créer"} un utilisateur</h2>
     </header>
     <div>
       <form>
@@ -145,6 +172,7 @@
                 isValidFromDateError = false;
                 isValidToDateError = false;
               }}
+              disabled={isCreating}
               error={isValidFromDateError}
               clear
             />
@@ -160,6 +188,7 @@
                 isValidFromDateError = false;
                 isValidToDateError = false;
               }}
+              disabled={isCreating}
               error={isValidToDateError}
               clear
             />
@@ -167,7 +196,11 @@
         </Field>
       </form>
       <Button type="primary" onclick={validateForm} disabled={isCreating}
-        >{isCreating ? "Chargement..." : "Créer"}</Button
+        >{isCreating
+          ? "Chargement..."
+          : pageMode === "edit"
+            ? "Modifier"
+            : "Créer"}</Button
       >
       <Button
         type="secondary"

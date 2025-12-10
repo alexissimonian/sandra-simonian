@@ -24,3 +24,12 @@ export async function getValidDatesForEmail(email: string): Promise<{ validFromS
 
   return { validFromString: data?.validFrom, validToString: data?.validTo, error: validDateError }
 }
+
+export async function getUserProfileFromId(id: string): Promise<{ user: Profile, error: any }> {
+  const { data, error: getProfileError } = await supabaseAdminClient.from("profiles").select("*").eq("id", id).single();
+  if (getProfileError) {
+    console.error(getProfileError);
+  }
+
+  return { user: data, error: getProfileError }
+}

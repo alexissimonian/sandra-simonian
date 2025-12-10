@@ -2,6 +2,23 @@ import { isHttpError, type Actions } from "@sveltejs/kit";
 import { getComparableTodayDate, validateDateRange, validateEmailField, validateNameField } from "$lib/utils";
 import { createUserProfile } from "$lib/server/services/adminUser/adminUserCommand";
 import { error } from "@sveltejs/kit";
+import type { PageServerLoad } from "./$types";
+import { getUserProfileFromId } from "$lib/server/services/adminUser/adminUserRequest";
+
+export const load: PageServerLoad = async ({ url }) => {
+  const userId = url.searchParams.get("id");
+  if (userId) {
+    const { user, error: getProfileError } = await getUserProfileFromId(userId);
+    if (getProfileError || !user) {
+      console.error(getProfileError ?? "User non trouvé !");
+      throw error(500, "Le profil n'a pas été trouvé...");
+    }
+
+    return { mode: "edit", user }
+  }
+
+  return { mode: "create" }
+}
 
 export const actions: Actions = {
   create: async ({ request }) => {
@@ -23,7 +40,7 @@ export const actions: Actions = {
 
     if (validToDateString) {
       validToDate = new Date(validToDateString);
-      isValidToDateInRange = isValidFromDateInRange && (validateDateRange(validToDate, validFromDate))
+      isValidToDateInRange = validateDateRange(validToDate, validFromDate ?? getComparableTodayDate())
     }
 
     const isLastnameValidated = validateNameField(lastname);

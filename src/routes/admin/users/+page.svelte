@@ -64,11 +64,11 @@
   ];
 
   const gotoEditPage = (id: string) => {
-    goto(`${page.url.pathname}/edit/${id}`);
+    goto(`${page.url.pathname}/editorcreate?id=${id}`);
   };
 
   const gotoCreatePage = () => {
-    goto(`${page.url.pathname}/create`);
+    goto(`${page.url.pathname}/editorcreate`);
   };
 
   async function deleteSelectedUser(id: string) {
