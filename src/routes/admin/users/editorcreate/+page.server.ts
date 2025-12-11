@@ -48,13 +48,10 @@ export const actions: Actions = {
     const isEmailValidated = validateEmailField(email);
 
     if (isLastnameValidated && isFirstnameValidated && isEmailValidated && isValidFromDateInRange && isValidToDateInRange) {
-      try {
-        await createUserProfile(email.toLocaleLowerCase(), lastname.toLocaleLowerCase(), firstname.toLocaleLowerCase(), validFromDate, validToDate);
-      } catch (profileError) {
-        console.error(profileError);
-        if (isHttpError(profileError)) {
-          throw error(profileError.status, "Un problème est survenu lors de la création de l'utilisateur.");
-        }
+      const { error: createUserProfileError } = await createUserProfile(email.toLocaleLowerCase(), lastname.toLocaleLowerCase(), firstname.toLocaleLowerCase(), validFromDate, validToDate);
+      if (createUserProfileError) {
+        console.error(createUserProfileError);
+        throw error(500, "Un problème est survenu lors de la création de l'utilisateur.");
       }
     } else {
       throw error(400, "Echec lors de la validation de l'utilisateur.");

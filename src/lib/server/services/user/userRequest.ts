@@ -2,14 +2,16 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Profile, ProfileRow } from "$lib/types";
 import { capitalize } from "$lib/utils";
 
-export async function getUserProfile(supabase: SupabaseClient): Promise<Profile> {
-  const { data, error } = await supabase.from("profiles").select().single();
+export async function getUserProfile(supabase: SupabaseClient): Promise<{ profile: Profile, error: any }> {
+  let profile: Profile | undefined;
+  const { data, error: getProfileError } = await supabase.from("profiles").select().single();
 
-  if (error) {
-    console.error("Un problème est survenu lors de la récupération du profil: " + error.message);
-    throw new Error("Un problème est survenu lors de la récupération du profil.");
+  if (getProfileError) {
+    console.error(getProfileError);
   };
-  return generateProfile(data);
+
+  profile = generateProfile(data);
+  return { profile, error: getProfileError }
 }
 
 export function generateProfile(row: ProfileRow): Profile {

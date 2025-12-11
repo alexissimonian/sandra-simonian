@@ -3,7 +3,7 @@ import type { Profile } from "$lib/types";
 import type { Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { deleteUser } from "$lib/server/services/adminUser/adminUserCommand";
-import { error, isHttpError } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async () => {
   let profiles: Profile[] = [];
@@ -21,13 +21,10 @@ export const actions: Actions = {
     const data = await request.formData();
     const userId = data.get("userId") as string;
 
-    try {
-      await deleteUser(userId);
-    } catch (deletionError) {
+    const { error: deletionError } = await deleteUser(userId);
+    if (deletionError) {
       console.error(deletionError);
-      if (isHttpError(deletionError)) {
-        throw error(deletionError.status, deletionError.body.message);
-      };
+      throw error(500, "Un problème est survenu lors de la suppression de l'utilisateur.");
     }
 
     return { success: true }

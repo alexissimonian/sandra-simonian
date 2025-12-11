@@ -63,15 +63,15 @@ export const handle: Handle = async ({ event, resolve }) => {
     throw redirect(303, "/login");
   }
 
-  let profile: Profile | undefined = undefined;
+  let profile: Profile | undefined;
   if (user) {
-    try {
-      profile = await getUserProfile(event.locals.supabase);
-      event.locals.profile = profile;
-    } catch (profileError) {
-      console.error(profileError);
+    const { profile: userProfile, error: getProfileError } = await getUserProfile(event.locals.supabase);
+    if (getProfileError) {
+      console.error(getProfileError);
       throw error(500, "Nous n'avons pas pu récupérer le profil.");
     }
+    profile = userProfile;
+    event.locals.profile = userProfile;
   }
 
   if (isRouteProtected && profile?.validFrom) {
