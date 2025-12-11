@@ -5,6 +5,7 @@ import { error, redirect } from '@sveltejs/kit'
 import type { Profile } from '$lib/types'
 import { getUserProfile } from '$lib/server/services/user/userRequest'
 import { validateDateRange } from '$lib/utils'
+import { checkinUser } from '$lib/server/services/adminUser/adminUserCommand'
 
 export const handle: Handle = async ({ event, resolve }) => {
   event.locals.supabase = createServerClient(publicEnv.PUBLIC_SUPABASE_URL, publicEnv.PUBLIC_SUPABASE_PUBLISHABLE_KEY, {
@@ -98,6 +99,13 @@ export const handle: Handle = async ({ event, resolve }) => {
       return new Response(JSON.stringify({ error: "unauthorized" }), { status: 401, headers: { "Content-Type": "application/json" } });
     }
     throw redirect(303, "/app");
+  }
+
+  if (isRouteProtected && profile?.id) {
+    const { error: errorCheckin } = await checkinUser(profile.id);
+    if (errorCheckin) {
+      console.error(errorCheckin);
+    }
   }
 
   return resolve(event, {

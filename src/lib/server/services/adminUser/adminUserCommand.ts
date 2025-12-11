@@ -67,3 +67,12 @@ export async function deleteUser(id: string): Promise<void> {
     throw error(500, "Impossible de supprimer l'utilisateur...");
   }
 }
+
+export async function checkinUser(id: string): Promise<{ error: any }> {
+  const { error: checkinUserError } = await supabaseAdminClient.from("profiles").update({ last_sign_in_at: new Date().toISOString() }).eq("id", id);
+  if (checkinUserError) {
+    console.error(checkinUserError);
+  }
+
+  return { error: checkinUserError };
+}
