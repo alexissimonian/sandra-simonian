@@ -97,6 +97,7 @@
         formData.append("validFromDate", validFromDate.toDateString());
       if (validToDate)
         formData.append("validToDate", validToDate.toDateString());
+      if (data.user) formData.append("userId", data.user.id);
       const response = await sendFormData(`?/${pageMode}`, formData);
       if (response.status === 200) {
         notify(

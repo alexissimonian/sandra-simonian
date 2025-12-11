@@ -44,6 +44,21 @@ export async function createUserProfile(email: string, lastname: string, firstna
   };
 }
 
+export async function updateUserProfile(id: string, email: string, lastname: string, firstname: string, validFromDate?: Date, validToDate?: Date): Promise<{ error: any }> {
+  const { error: authError } = await supabaseAdminClient.auth.admin.updateUserById(id, { email });
+  if (authError) {
+    console.error(authError);
+    throw error(500, "Erreur à la modification de l'utilisateur !");
+  }
+  const { error: updateError } = await supabaseAdminClient.from("profiles").upsert({ id, email, firstname, lastname, validFrom: validFromDate?.toISOString(), validTo: validToDate?.toISOString() });
+  if (updateError) {
+    console.error(updateError);
+    throw error(500, "Erreur à la modification de l'utilisateur !");
+  }
+
+  return { error: updateError }
+}
+
 export async function deleteUser(id: string): Promise<void> {
   const { error: deletionError } = await supabaseAdminClient.auth.admin.deleteUser(id);
 
