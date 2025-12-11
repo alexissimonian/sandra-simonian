@@ -1,5 +1,5 @@
 import { env as publicEnv } from '$env/dynamic/public'
-import { createServerClient } from '@supabase/ssr'
+import { createServerClient, isBrowser } from '@supabase/ssr'
 import type { Handle } from '@sveltejs/kit'
 import { error, redirect } from '@sveltejs/kit'
 import type { Profile } from '$lib/types'
@@ -75,12 +75,22 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   if (isRouteProtected && profile?.validFrom) {
     const validFromDate = new Date(profile?.validFrom);
-    if (!validateDateRange(new Date(), validFromDate)) throw error(401, "Ce profil n'est pas encore valide.");
+    if (!validateDateRange(new Date(), validFromDate)) {
+      if (event.request.method !== "GET" || !isBrowser()) {
+        return new Response(JSON.stringify({ error: "unauthorized" }), { status: 401, headers: { "Content-Type": "application/json" } });
+      }
+      throw redirect(303, "/logout");
+    }
   }
 
   if (isRouteProtected && profile?.validTo) {
     const validToDate = new Date(profile?.validTo);
-    if (!validateDateRange(new Date(), undefined, validToDate)) throw error(401, "Ce profil n'est plus valide.");
+    if (!validateDateRange(new Date(), undefined, validToDate)) {
+      if (event.request.method !== "GET" || !isBrowser()) {
+        return new Response(JSON.stringify({ error: "unauthorized" }), { status: 401, headers: { "Content-Type": "application/json" } });
+      }
+      throw redirect(303, "/logout");
+    }
   }
 
   if (event.url.pathname.startsWith("/admin") && profile?.role !== "admin") {
