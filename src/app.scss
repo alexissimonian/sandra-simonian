@@ -11,12 +11,12 @@ html {
 
 body {
   margin: 0;
-  padding: 2rem;
+  padding: 0;
 }
 
 .faux-body {
   @include flex-center;
-
+  padding: 2rem;
 }
 
 .error-message {

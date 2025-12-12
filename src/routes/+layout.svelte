@@ -14,9 +14,7 @@
 <WillowCore>
   <WillowGrid>
     <Globals>
-      <div class="app-wrapper">
-        {@render children()}
-      </div>
+      {@render children()}
     </Globals>
   </WillowGrid>
 </WillowCore>

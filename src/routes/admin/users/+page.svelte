@@ -112,7 +112,7 @@
 <div class="faux-body">
   <section>
     <header>
-      <h2>Nos Utilisateurs</h2>
+      <h2>Utilisateurs</h2>
     </header>
     <div class="buttons-container">
       <Button

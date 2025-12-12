@@ -137,6 +137,6 @@
 
   h2 {
     font-size: 4rem;
-    margin: 2em;
+    margin: 1.5em;
   }
 </style>
