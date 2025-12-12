@@ -17,14 +17,14 @@
   }
 </script>
 
-<nav class="navbar">
+<header class="headerbar">
   <DropDownMenu {options} onclick={optionClicked}>
     <Button css="navbutton" icon="wxi-account">Compte</Button>
   </DropDownMenu>
-</nav>
+</header>
 
 <style lang="scss">
-  nav {
+  header {
     display: flex;
     gap: 1rem;
     width: 100%;
@@ -34,7 +34,7 @@
     flex-direction: column;
   }
 
-  .navbar :global(button.navbutton) {
+  .headerbar :global(button.navbutton) {
     background-color: white;
   }
 </style>

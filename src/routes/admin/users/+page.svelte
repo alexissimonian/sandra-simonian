@@ -135,12 +135,6 @@
 </div>
 
 <style lang="scss">
-  .faux-body {
-    height: 100dvh;
-    overflow-x: hidden;
-    overflow-y: hidden;
-  }
-
   .buttons-container {
     display: flex;
     justify-content: flex-end;

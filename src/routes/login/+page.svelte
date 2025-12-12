@@ -126,10 +126,6 @@
 </div>
 
 <style lang="scss">
-  .faux-body {
-    height: 100dvh;
-  }
-
   .code-validation-buttons {
     display: flex;
     gap: 2rem;
