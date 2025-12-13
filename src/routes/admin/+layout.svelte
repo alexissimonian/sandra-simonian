@@ -2,7 +2,8 @@
   import { getContext } from "svelte";
   import { beforeNavigate, afterNavigate } from "$app/navigation";
   const { showNotice, showModal } = getContext<any>("wx-helpers");
-  import { notificationHelper, loadingPanel } from "$lib/utils";
+  import { loadingPanel } from "$lib/types";
+  import { notificationHelper } from "$lib/utils";
   import Navbar from "$lib/components/Navbar.svelte";
   import SideBar from "$lib/components/SideBar.svelte";
   import Footer from "$lib/components/Footer.svelte";
