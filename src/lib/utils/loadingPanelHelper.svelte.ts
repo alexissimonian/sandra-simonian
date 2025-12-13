@@ -1,9 +1,13 @@
-export let isLoadingPanel = $state<boolean>(false);
+class LoadingPanelState {
+  isLoadingPanel = $state(false);
 
-export function startLoading() {
-  isLoadingPanel = true;
+  start() {
+    this.isLoadingPanel = true;
+  }
+
+  end() {
+    this.isLoadingPanel = false;
+  }
 }
 
-export function endLoading() {
-  isLoadingPanel = false;
-}
+export const loadingPanel = new LoadingPanelState();

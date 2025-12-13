@@ -1,11 +1,11 @@
 <script lang="ts">
   import { getContext } from "svelte";
+  import { beforeNavigate, afterNavigate } from "$app/navigation";
   const { showNotice, showModal } = getContext<any>("wx-helpers");
-  import { notificationHelper } from "$lib/utils";
+  import { notificationHelper, loadingPanel } from "$lib/utils";
   import Navbar from "$lib/components/Navbar.svelte";
   import SideBar from "$lib/components/SideBar.svelte";
   import Footer from "$lib/components/Footer.svelte";
-  import { isLoadingPanel } from "$lib/utils/loadingPanelHelper.svelte.js";
   import LoadingPanel from "$lib/components/LoadingPanel.svelte";
 
   let { data, children } = $props();
@@ -13,6 +13,14 @@
 
   notificationHelper.showNotice = showNotice;
   notificationHelper.showModal = showModal;
+
+  beforeNavigate(() => {
+    loadingPanel.start();
+  });
+
+  afterNavigate(() => {
+    loadingPanel.end();
+  });
 </script>
 
 <div class="app">
@@ -21,7 +29,7 @@
     <SideBar {profile} />
     <div class="main">
       <main>
-        {#if isLoadingPanel}<LoadingPanel />{:else}
+        {#if loadingPanel.isLoadingPanel}<LoadingPanel />{:else}
           {@render children()}
         {/if}
       </main>
