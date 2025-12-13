@@ -48,6 +48,11 @@ section {
   gap: 1rem;
 }
 
+.left-header {
+  align-self: flex-start;
+  width: 100%;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

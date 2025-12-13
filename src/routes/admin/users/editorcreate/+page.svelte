@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Field, Text, Button, DatePicker } from "@svar-ui/svelte-core";
+  import { Field, Text, Button, DatePicker, Tabs } from "@svar-ui/svelte-core";
   import {
     notify,
     sendFormData,
@@ -12,6 +12,7 @@
   import { goto } from "$app/navigation";
   import type { PageData } from "./$types";
   import { onMount } from "svelte";
+  import { Grid } from "@svar-ui/svelte-grid";
 
   let { data }: { data: PageData } = $props();
 
@@ -28,6 +29,8 @@
   let validToDate: Date | undefined = $state(undefined);
   let isValidFromDateError = $state(false);
   let isValidToDateError = $state(false);
+  let activeTab = $state(0);
+  let api = $state<any>();
 
   onMount(() => {
     if (pageMode === "edit") {
@@ -115,6 +118,11 @@
     }
     isCreating = false;
   }
+
+  const tabs = [
+    { id: 0, label: "Compte", icon: "fa-thin fa-user" },
+    { id: 1, label: "Cours", icon: "fa-thin fa-book" },
+  ];
 </script>
 
 <svelte:head>
@@ -129,88 +137,104 @@
       <h2>{pageMode === "edit" ? "Modifier" : "Créer"} un utilisateur</h2>
     </header>
     <div>
-      <form>
-        <Field label="Nom" error={isLastnameError} required>
-          {#snippet children(params?: any)}
-            <Text
-              bind:value={lastname}
-              id={params.id}
-              error={isLastnameError}
-              onchange={() => (isLastnameError = false)}
-              disabled={isCreating}
-            />
-          {/snippet}
-        </Field>
-        <Field label="Prénom" error={isFirstnameError} required>
-          {#snippet children(params?: any)}
-            <Text
-              bind:value={firstname}
-              id={params.id}
-              error={isFirstnameError}
-              onchange={() => (isFirstnameError = false)}
-              disabled={isCreating}
-            />
-          {/snippet}
-        </Field>
-        <Field label="Email" error={isEmailError} required>
-          {#snippet children(params?: any)}
-            <Text
-              bind:value={email}
-              id={params.id}
-              error={isEmailError}
-              onchange={() => (isEmailError = false)}
-              disabled={isCreating}
-            />
-          {/snippet}
-        </Field>
-        <Field label="Valide à partir">
-          {#snippet children(params?: any)}
-            <DatePicker
-              id={params.id}
-              bind:value={validFromDate}
-              format={"%d/%m/%Y"}
-              onchange={() => {
-                isValidFromDateError = false;
-                isValidToDateError = false;
-              }}
-              disabled={isCreating}
-              error={isValidFromDateError}
-              clear
-            />
-          {/snippet}
-        </Field>
-        <Field label="Valide jusqu'au">
-          {#snippet children(params?: any)}
-            <DatePicker
-              id={params.id}
-              bind:value={validToDate}
-              format={"%d/%m/%Y"}
-              onchange={() => {
-                isValidFromDateError = false;
-                isValidToDateError = false;
-              }}
-              disabled={isCreating}
-              error={isValidToDateError}
-              clear
-            />
-          {/snippet}
-        </Field>
-      </form>
-      <Button type="primary" onclick={validateForm} disabled={isCreating}
-        >{isCreating
-          ? "Chargement..."
-          : pageMode === "edit"
-            ? "Modifier"
-            : "Créer"}</Button
-      >
-      <Button
-        type="secondary"
-        onclick={() => goto("/admin/users")}
-        disabled={isCreating}>Annuler</Button
-      >
+      <div class="tabs-container">
+        <Tabs options={tabs} bind:value={activeTab} />
+      </div>
+      {#if activeTab === 0}
+        <form>
+          <Field label="Nom" error={isLastnameError} required>
+            {#snippet children(params?: any)}
+              <Text
+                bind:value={lastname}
+                id={params.id}
+                error={isLastnameError}
+                onchange={() => (isLastnameError = false)}
+                disabled={isCreating}
+              />
+            {/snippet}
+          </Field>
+          <Field label="Prénom" error={isFirstnameError} required>
+            {#snippet children(params?: any)}
+              <Text
+                bind:value={firstname}
+                id={params.id}
+                error={isFirstnameError}
+                onchange={() => (isFirstnameError = false)}
+                disabled={isCreating}
+              />
+            {/snippet}
+          </Field>
+          <Field label="Email" error={isEmailError} required>
+            {#snippet children(params?: any)}
+              <Text
+                bind:value={email}
+                id={params.id}
+                error={isEmailError}
+                onchange={() => (isEmailError = false)}
+                disabled={isCreating}
+              />
+            {/snippet}
+          </Field>
+          <Field label="Valide à partir">
+            {#snippet children(params?: any)}
+              <DatePicker
+                id={params.id}
+                bind:value={validFromDate}
+                format={"%d/%m/%Y"}
+                onchange={() => {
+                  isValidFromDateError = false;
+                  isValidToDateError = false;
+                }}
+                disabled={isCreating}
+                error={isValidFromDateError}
+                clear
+              />
+            {/snippet}
+          </Field>
+          <Field label="Valide jusqu'au">
+            {#snippet children(params?: any)}
+              <DatePicker
+                id={params.id}
+                bind:value={validToDate}
+                format={"%d/%m/%Y"}
+                onchange={() => {
+                  isValidFromDateError = false;
+                  isValidToDateError = false;
+                }}
+                disabled={isCreating}
+                error={isValidToDateError}
+                clear
+              />
+            {/snippet}
+          </Field>
+        </form>
+        <Button type="primary" onclick={validateForm} disabled={isCreating}
+          >{isCreating
+            ? "Chargement..."
+            : pageMode === "edit"
+              ? "Modifier"
+              : "Créer"}</Button
+        >
+        <Button
+          type="secondary"
+          onclick={() => goto("/admin/users")}
+          disabled={isCreating}>Annuler</Button
+        >
+      {:else}
+        <div>
+          <Grid bind:this={api} tree={true} />
+        </div>
+      {/if}
     </div>
   </section>
 </div>
 
 <style lang="scss">
+  .tabs-container {
+    margin-bottom: 2rem;
+  }
+
+  form {
+    margin-bottom: 1.5rem;
+  }
 </style>

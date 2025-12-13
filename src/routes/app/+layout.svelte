@@ -1,6 +1,7 @@
 <script lang="ts">
   import { getContext } from "svelte";
   import { beforeNavigate, afterNavigate } from "$app/navigation";
+  import { browser } from "$app/environment";
   const { showNotice, showModal } = getContext<any>("wx-helpers");
   import { loadingPanel } from "$lib/types";
   import { notificationHelper } from "$lib/utils";
@@ -30,7 +31,9 @@
     <SideBar {profile} />
     <div class="main">
       <main>
-        {#if loadingPanel.isLoadingPanel}<LoadingPanel />{:else}
+        {#if browser && loadingPanel.isLoadingPanel}
+          <LoadingPanel />
+        {:else}
           {@render children()}
         {/if}
       </main>

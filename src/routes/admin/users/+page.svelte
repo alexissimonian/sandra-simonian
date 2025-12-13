@@ -111,7 +111,7 @@
 
 <div class="faux-body">
   <section>
-    <header>
+    <header class="left-header">
       <h2>Utilisateurs</h2>
     </header>
     <div class="buttons-container">
@@ -145,7 +145,6 @@
 
   .grid-container {
     width: 100%;
-    padding: 0rem 1rem;
 
     :global(.wx-grid) {
       height: auto;

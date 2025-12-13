@@ -2,11 +2,15 @@ class LoadingPanelState {
   isLoadingPanel = $state(false);
 
   start() {
-    this.isLoadingPanel = true;
+    setTimeout(() => {
+      this.isLoadingPanel = true;
+    }, 0);
   }
 
   end() {
-    this.isLoadingPanel = false;
+    setTimeout(() => {
+      this.isLoadingPanel = false;
+    }, 0);
   }
 }
 

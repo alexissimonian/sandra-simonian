@@ -8,17 +8,22 @@
 <aside>
   <nav>
     <ul>
+      <li class="separator">App</li>
       <li>
-        <Button css="sideBarLink" icon="wxi-external" onclick={() => goto("/")}
-          >Accueil</Button
+        <Button css="sideBarLink" onclick={() => goto("/app")}
+          ><i class="fa-thin fa-house icon"></i>Accueil</Button
         >
       </li>
-      {#if profile.role === "admin"}
+      {#if profile?.role === "admin"}
+        <li class="separator">Admin</li>
         <li>
-          <Button
-            css="sideBarLink"
-            icon="wxi-external"
-            onclick={() => goto("/admin")}>Admin</Button
+          <Button css="sideBarLink" onclick={() => goto("/admin")}
+            ><i class="fa-thin fa-gear-complex icon"></i>Admin</Button
+          >
+        </li>
+        <li>
+          <Button css="sideBarLink" onclick={() => goto("/admin/users")}>
+            <i class="fa-thin fa-user-gear icon"></i> Utilisateurs</Button
           >
         </li>
       {/if}
@@ -50,5 +55,16 @@
 
   li {
     margin-bottom: 0.5rem;
+  }
+
+  .icon {
+    font-size: 1.1rem;
+    margin-right: 0.25rem;
+  }
+
+  .separator {
+    font-weight: bold;
+    color: rgb(217, 217, 217);
+    padding: 0.3rem 1.3rem;
   }
 </style>
