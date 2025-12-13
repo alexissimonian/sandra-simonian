@@ -5,6 +5,8 @@
   import Navbar from "$lib/components/Navbar.svelte";
   import SideBar from "$lib/components/SideBar.svelte";
   import Footer from "$lib/components/Footer.svelte";
+  import { isLoadingPanel } from "$lib/utils/loadingPanelHelper.svelte.js";
+  import LoadingPanel from "$lib/components/LoadingPanel.svelte";
 
   let { data, children } = $props();
   let profile = data.profile;
@@ -19,7 +21,9 @@
     <SideBar {profile} />
     <div class="main">
       <main>
-        {@render children()}
+        {#if isLoadingPanel}<LoadingPanel />{:else}
+          {@render children()}
+        {/if}
       </main>
       <Footer />
     </div>

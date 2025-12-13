@@ -31,6 +31,7 @@
     height: 100%;
     border-right: 1px solid rgb(217, 217, 217);
     width: 260px;
+    flex-shrink: 0;
     left: 0;
     padding: 1rem;
   }
