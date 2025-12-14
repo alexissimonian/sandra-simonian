@@ -10,7 +10,7 @@
   }
 
   footer {
-    border-top: 1px solid rgb(217, 217, 217);
+    border-top: 1px solid $border-gray-color;
     height: 48px;
     width: 100%;
     display: flex;

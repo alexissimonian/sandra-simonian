@@ -1,9 +1,14 @@
 /* Color Palette */
-$orange: #F58A07;
-$light-orange: #F9AB55;
-$blue: #084887;
-$light-blue: #909CC2;
-$white: #F7F5FB;
-$hard-red: #F8333C;
-$hard-green: #44AF69;
-$sand: #DBD5B5;
+$text-error-color: #e7000b;
+$text-muted-color: #737373;
+
+$main-bg-color: #fafafa;
+
+$border-gray-color: #d9d9d9;
+$border-error-color: $text-error-color;
+
+/* Sizes */
+$text-base: 14px;
+$text-lg: 16px;
+$text-3xl: 1.875rem;
+$text-2xl: 1.5rem;

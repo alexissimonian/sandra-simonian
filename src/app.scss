@@ -10,10 +10,6 @@ body {
   height: 100dvh;
 }
 
-.faux-body {
-  padding: 2rem;
-}
-
 .error-message {
   color: var(--wx-color-danger);
 }
@@ -38,7 +34,45 @@ body {
 
   main {
     height: 100%;
-    overflow-x: auto;
+    overflow-y: scroll;
+    padding: 3rem 5rem;
+
+    .body-header {
+      padding-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .header-actions {
+        display: flex;
+        gap: 1rem;
+
+        .cancel {
+          color: $text-error-color;
+          border: 1px solid $border-error-color;
+        }
+
+        .cancel:hover {
+          background-color: color-mix(in srgb, $text-error-color 4%, transparent);
+        }
+      }
+    }
+
+    .body-content {
+      h2 {
+        font-size: $text-2xl;
+      }
+    }
+
+    .page-title {
+      padding-bottom: 0.5rem;
+      font-size: $text-3xl;
+    }
+
+    .page-sub-title {
+      color: $text-muted-color;
+      font-size: $text-lg;
+    }
   }
 }
 
@@ -51,16 +85,4 @@ section {
 .left-header {
   align-self: flex-start;
   width: 100%;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
 }

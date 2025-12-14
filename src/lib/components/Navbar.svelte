@@ -28,7 +28,7 @@
     display: flex;
     gap: 1rem;
     width: 100%;
-    border-bottom: 1px solid rgb(217, 217, 217);
+    border-bottom: 1px solid $border-gray-color;
     padding: 0.75rem 1rem;
     align-items: flex-end;
     flex-direction: column;

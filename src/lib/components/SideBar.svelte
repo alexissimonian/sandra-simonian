@@ -34,7 +34,7 @@
 <style lang="scss">
   aside {
     height: 100%;
-    border-right: 1px solid rgb(217, 217, 217);
+    border-right: 1px solid $border-gray-color;
     width: 260px;
     flex-shrink: 0;
     left: 0;

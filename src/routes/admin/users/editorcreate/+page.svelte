@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Field, Text, Button, DatePicker, Tabs } from "@svar-ui/svelte-core";
+  import { Field, Text, Button, DatePicker } from "@svar-ui/svelte-core";
   import {
     notify,
     sendFormData,
@@ -12,7 +12,6 @@
   import { goto } from "$app/navigation";
   import type { PageData } from "./$types";
   import { onMount } from "svelte";
-  import { Grid } from "@svar-ui/svelte-grid";
 
   let { data }: { data: PageData } = $props();
 
@@ -29,8 +28,6 @@
   let validToDate: Date | undefined = $state(undefined);
   let isValidFromDateError = $state(false);
   let isValidToDateError = $state(false);
-  let activeTab = $state(0);
-  let api = $state<any>();
 
   onMount(() => {
     if (pageMode === "edit") {
@@ -118,11 +115,6 @@
     }
     isCreating = false;
   }
-
-  const tabs = [
-    { id: 0, label: "Compte", icon: "fa-thin fa-user" },
-    { id: 1, label: "Cours", icon: "fa-thin fa-book" },
-  ];
 </script>
 
 <svelte:head>
@@ -132,15 +124,50 @@
 </svelte:head>
 
 <div class="faux-body">
-  <section>
-    <header>
-      <h2>{pageMode === "edit" ? "Modifier" : "Créer"} un utilisateur</h2>
-    </header>
-    <div>
-      <div class="tabs-container">
-        <Tabs options={tabs} bind:value={activeTab} />
-      </div>
-      {#if activeTab === 0}
+  <div class="body-header">
+    <div class="header-items">
+      <header>
+        <h1 class="page-title">
+          {pageMode === "edit" ? "Modifier" : "Créer"} un utilisateur
+        </h1>
+      </header>
+      <p class="page-sub-title">
+        {pageMode === "edit" ? "Modifier" : "Créer"} les informations d'un utilisateur
+        et lui donner accès à certains cours.
+      </p>
+    </div>
+    <div class="header-actions">
+      <Button
+        css="header-button validate"
+        type="primary"
+        onclick={validateForm}
+        disabled={isCreating}
+        >{isCreating
+          ? "Chargement..."
+          : pageMode === "edit"
+            ? "Modifier"
+            : "Créer"}</Button
+      >
+      <Button
+        css="header-button cancel"
+        type="secondary"
+        onclick={() => goto("/admin/users")}
+        disabled={isCreating}>Annuler</Button
+      >
+    </div>
+  </div>
+  <div class="body-content">
+    <section class="account-courses">
+      <header>
+        <h2>Cours</h2>
+      </header>
+      <div></div>
+    </section>
+    <section class="account-details">
+      <header>
+        <h2>Détails du compte</h2>
+      </header>
+      <div>
         <form>
           <Field label="Nom" error={isLastnameError} required>
             {#snippet children(params?: any)}
@@ -208,33 +235,31 @@
             {/snippet}
           </Field>
         </form>
-        <Button type="primary" onclick={validateForm} disabled={isCreating}
-          >{isCreating
-            ? "Chargement..."
-            : pageMode === "edit"
-              ? "Modifier"
-              : "Créer"}</Button
-        >
-        <Button
-          type="secondary"
-          onclick={() => goto("/admin/users")}
-          disabled={isCreating}>Annuler</Button
-        >
-      {:else}
-        <div>
-          <Grid bind:this={api} tree={true} />
-        </div>
-      {/if}
-    </div>
-  </section>
+      </div>
+    </section>
+  </div>
 </div>
 
 <style lang="scss">
-  .tabs-container {
-    margin-bottom: 2rem;
+  section {
+    display: flex;
+    align-items: flex-start;
   }
 
-  form {
-    margin-bottom: 1.5rem;
+  .faux-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .body-content {
+    display: flex;
+    gap: 4rem;
+
+    .account-courses {
+      flex: 1;
+    }
+    .account-details {
+      flex: 0;
+    }
   }
 </style>
