@@ -7,15 +7,9 @@
     validateNameField,
     getComparableTodayDate,
     validateDateRange,
-    capitalize,
   } from "$lib/utils";
   import { goto } from "$app/navigation";
-  import type { PageData } from "./$types";
-  import { onMount } from "svelte";
-
-  let { data }: { data: PageData } = $props();
-
-  let pageMode = data.mode;
+  import PageHeader from "$lib/components/PageHeader.svelte";
 
   let lastname = $state("");
   let isLastnameError = $state(false);
@@ -29,25 +23,6 @@
   let isValidFromDateError = $state(false);
   let isValidToDateError = $state(false);
 
-  onMount(() => {
-    if (pageMode === "edit") {
-      if (!data.user) {
-        notify("danger", "Le profil n'est pas chargé dans cette page !");
-        goto("/admin/users");
-      } else {
-        firstname = capitalize(data.user.firstname);
-        lastname = capitalize(data.user.lastname);
-        email = data.user.email;
-        validFromDate = data.user.validFrom
-          ? new Date(data.user.validFrom)
-          : undefined;
-        validToDate = data.user.validTo
-          ? new Date(data.user.validTo)
-          : undefined;
-      }
-    }
-  });
-
   async function validateForm() {
     isCreating = true;
     if ((isLastnameError = !validateNameField(lastname)))
@@ -60,7 +35,6 @@
     if ((isEmailError = !validateEmailField(email)))
       notify("warning", "Il faut entrer un email valide.");
     if (
-      data.mode === "create" &&
       validFromDate &&
       (isValidFromDateError = !validateDateRange(
         validFromDate,
@@ -97,16 +71,9 @@
         formData.append("validFromDate", validFromDate.toDateString());
       if (validToDate)
         formData.append("validToDate", validToDate.toDateString());
-      if (data.user) formData.append("userId", data.user.id);
-      const response = await sendFormData(`?/${pageMode}`, formData);
+      const response = await sendFormData("?/create", formData);
       if (response.status === 200) {
-        notify(
-          "success",
-          `Utilisateur ${pageMode === "edit" ? "modifié" : "créé"} !`,
-        );
-        lastname = "";
-        firstname = "";
-        email = "";
+        notify("success", `Utilisateur créé !`);
         goto("/admin/users");
       } else {
         const message = await response.json();
@@ -118,44 +85,19 @@
 </script>
 
 <svelte:head>
-  <title
-    >Admin - {pageMode === "edit" ? "Modifier" : "Créer"} un utilisateur</title
-  >
+  <title>Admin - Créer un utilisateur</title>
 </svelte:head>
 
 <div class="faux-body">
-  <div class="body-header">
-    <div class="header-items">
-      <header>
-        <h1 class="page-title">
-          {pageMode === "edit" ? "Modifier" : "Créer"} un utilisateur
-        </h1>
-      </header>
-      <p class="page-sub-title">
-        {pageMode === "edit" ? "Modifier" : "Créer"} les informations d'un utilisateur
-        et lui donner accès à certains cours.
-      </p>
-    </div>
-    <div class="header-actions">
-      <Button
-        css="header-button validate"
-        type="primary"
-        onclick={validateForm}
-        disabled={isCreating}
-        >{isCreating
-          ? "Chargement..."
-          : pageMode === "edit"
-            ? "Modifier"
-            : "Créer"}</Button
-      >
-      <Button
-        css="header-button cancel"
-        type="secondary"
-        onclick={() => goto("/admin/users")}
-        disabled={isCreating}>Annuler</Button
-      >
-    </div>
-  </div>
+  <PageHeader
+    title="Créer un utilisateur"
+    subtitle="Créer les informations d'un utilisateur et lui donner accès à certains
+      cours."
+  >
+    <Button css="header-button validate" type="primary" onclick={validateForm}
+      >Créer</Button
+    >
+  </PageHeader>
   <div class="body-content">
     <section class="account-courses">
       <header>
