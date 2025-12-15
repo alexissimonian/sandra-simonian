@@ -110,7 +110,7 @@
         <h2>Détails du compte</h2>
       </header>
       <div>
-        <form>
+        <div>
           <Field label="Nom" error={isLastnameError} required>
             {#snippet children(params?: any)}
               <Text
@@ -176,7 +176,7 @@
               />
             {/snippet}
           </Field>
-        </form>
+        </div>
       </div>
     </section>
   </div>

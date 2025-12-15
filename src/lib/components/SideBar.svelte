@@ -11,19 +11,19 @@
       <li class="separator">App</li>
       <li>
         <Button css="sideBarLink" onclick={() => goto("/app")}
-          ><i class="fa-thin fa-house icon"></i>Accueil</Button
+          ><i class="fa-sharp fa-light fa-house icon"></i>Accueil</Button
         >
       </li>
       {#if profile?.role === "admin"}
         <li class="separator">Admin</li>
         <li>
           <Button css="sideBarLink" onclick={() => goto("/admin")}
-            ><i class="fa-thin fa-gear-complex icon"></i>Admin</Button
+            ><i class="fa-sharp fa-light fa-gear-complex icon"></i>Admin</Button
           >
         </li>
         <li>
           <Button css="sideBarLink" onclick={() => goto("/admin/users")}>
-            <i class="fa-thin fa-user-gear icon"></i> Utilisateurs</Button
+            <i class="fa-sharp fa-light fa-user-gear icon"></i> Utilisateurs</Button
           >
         </li>
       {/if}
@@ -51,6 +51,7 @@
     background-color: white;
     width: 100%;
     text-align: left;
+    color: $text-muted-color;
   }
 
   li {
@@ -61,5 +62,9 @@
     font-weight: bold;
     color: rgb(217, 217, 217);
     padding: 0.3rem 1.3rem;
+  }
+
+  .icon {
+    color: $text-muted-color;
   }
 </style>

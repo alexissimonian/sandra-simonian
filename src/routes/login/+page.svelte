@@ -3,11 +3,6 @@
   import { notify } from "$lib/utils";
   import { sendFormData, validateEmailField } from "$lib/utils/form";
   import { Text, Field, Button } from "@svar-ui/svelte-core";
-  import { getContext } from "svelte";
-  const { showNotice, showModal } = getContext<any>("wx-helpers");
-  import { notificationHelper } from "$lib/utils";
-  notificationHelper.showNotice = showNotice;
-  notificationHelper.showModal = showModal;
 
   let currentStep = $state("email");
   let isEmailError = $state(false);
@@ -75,7 +70,7 @@
       <h1>Connectez-vous</h1>
     </header>
     {#if currentStep === "email"}
-      <form>
+      <div>
         <Field label="Email" error={isEmailError} required>
           {#snippet children(params?: any)}
             <Text
@@ -88,7 +83,7 @@
             />
           {/snippet}
         </Field>
-      </form>
+      </div>
       <Button
         type="primary block"
         disabled={isEmailValidation}
@@ -98,7 +93,7 @@
     {/if}
 
     {#if currentStep === "code"}
-      <form>
+      <div>
         <Field label="Code" error={isCodeError} required>
           {#snippet children(params?: any)}
             <Text
@@ -111,7 +106,7 @@
             />
           {/snippet}
         </Field>
-      </form>
+      </div>
       <div class="code-validation-buttons">
         <Button
           type="primary block"
@@ -139,7 +134,7 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    gap: 2em;
+    gap: 1.5rem;
   }
 
   .faux-body {
@@ -150,6 +145,8 @@
 
   .code-validation-buttons {
     display: flex;
-    gap: 2rem;
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
   }
 </style>
