@@ -1,5 +1,5 @@
 <script lang="ts">
-  let { title, subtitle, children } = $props();
+  let { title, subtitle } = $props();
 </script>
 
 <div class="body-header">
@@ -11,7 +11,30 @@
       {subtitle}
     </p>
   </div>
-  <div class="header-actions">
-    {@render children()}
-  </div>
+  <div class="header-actions"></div>
 </div>
+
+<style lang="scss">
+  .body-header {
+    padding-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .page-title {
+      padding-bottom: 0.5rem;
+      font-size: $text-3xl;
+    }
+
+    .page-sub-title {
+      color: $text-muted-color;
+      font-size: $text-lg;
+    }
+  }
+</style>

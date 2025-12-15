@@ -7,6 +7,7 @@
   import { notify, sendFormData, verify } from "$lib/utils";
   import type { Profile } from "$lib/types";
   import CustomButtonCell from "$lib/components/grid/CustomButtonCell.svelte";
+  import PageHeader from "$lib/components/PageHeader.svelte";
 
   let { data }: { data: PageData } = $props();
 
@@ -111,9 +112,10 @@
 
 <div class="faux-body">
   <section>
-    <header class="left-header">
-      <h1>Tous les utilisateurs</h1>
-    </header>
+    <PageHeader
+      title="Tous les utilisateurs"
+      subtitle="Tu retrouves ici tous les clients. Les admin ne sont pas dans ce tableau."
+    ></PageHeader>
     <div class="buttons-container">
       <Button
         type="primary"

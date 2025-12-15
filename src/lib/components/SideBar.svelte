@@ -79,6 +79,7 @@
   }
 
   .icon {
+    margin-right: 1rem;
     color: $text-light-gray;
   }
 
@@ -97,5 +98,6 @@
     margin-left: 1rem;
     padding: 0.25rem;
     border: 1px solid $border-gray-color;
+    font-weight: 300;
   }
 </style>
