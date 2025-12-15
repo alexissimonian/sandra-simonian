@@ -1,5 +1,4 @@
 <script lang="ts">
-  import favicon from "$lib/assets/favicon.svg";
   import { Globals, Willow as WillowCore } from "@svar-ui/svelte-core";
   import { Willow as WillowGrid } from "@svar-ui/svelte-grid";
   import "../app.scss";
@@ -9,8 +8,8 @@
   import Footer from "$lib/components/Footer.svelte";
   import SideBar from "$lib/components/SideBar.svelte";
   import LoadingPanel from "$lib/components/LoadingPanel.svelte";
-  import { browser } from "$app/environment";
   import Notifications from "$lib/components/Notifications.svelte";
+  import { browser } from "$app/environment";
 
   let { data, children } = $props();
   let profile = $derived(data.profile);
@@ -25,7 +24,7 @@
 </script>
 
 <svelte:head>
-  <link rel="icon" href={favicon} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 </svelte:head>
 
 <WillowCore>
@@ -40,8 +39,9 @@
           <main>
             <Globals>
               <Notifications />
-              {#if browser && loadingPanel.isLoadingPanel}<LoadingPanel
-                />{:else}
+              {#if browser && loadingPanel.isLoadingPanel}
+                <LoadingPanel />
+              {:else}
                 {@render children()}
               {/if}
             </Globals>
