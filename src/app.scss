@@ -14,68 +14,6 @@ body {
   color: var(--wx-color-danger);
 }
 
-.app {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-}
-
-.app-content {
-  display: flex;
-  flex: 1;
-}
-
-.main {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-
-  main {
-    height: 100%;
-    overflow-y: scroll;
-    padding: 3rem 5rem;
-
-    .body-header {
-      padding-bottom: 0.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .header-actions {
-        display: flex;
-        gap: 1rem;
-
-        .cancel {
-          color: $text-error-color;
-          border: 1px solid $border-error-color;
-        }
-
-        .cancel:hover {
-          background-color: color-mix(in srgb, $text-error-color 4%, transparent);
-        }
-      }
-    }
-
-    .body-content {
-      h2 {
-        font-size: $text-2xl;
-      }
-    }
-
-    .page-title {
-      padding-bottom: 0.5rem;
-      font-size: $text-3xl;
-    }
-
-    .page-sub-title {
-      color: $text-muted-color;
-      font-size: $text-lg;
-    }
-  }
-}
-
 section {
   @include flex-center;
   width: 100%;
@@ -85,4 +23,9 @@ section {
 .left-header {
   align-self: flex-start;
   width: 100%;
+}
+
+.icon {
+  font-size: 1.1rem;
+  margin-right: 0.25rem;
 }

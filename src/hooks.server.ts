@@ -1,11 +1,12 @@
 import { env as publicEnv } from '$env/dynamic/public'
-import { createServerClient, isBrowser } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
 import type { Handle } from '@sveltejs/kit'
 import { error, redirect } from '@sveltejs/kit'
 import type { Profile } from '$lib/types'
 import { getUserProfile } from '$lib/server/services/user/userRequest'
 import { validateDateRange } from '$lib/utils'
 import { checkinUser } from '$lib/server/services/adminUser/adminUserCommand'
+import { browser } from '$app/environment'
 
 export const handle: Handle = async ({ event, resolve }) => {
   event.locals.supabase = createServerClient(publicEnv.PUBLIC_SUPABASE_URL, publicEnv.PUBLIC_SUPABASE_PUBLISHABLE_KEY, {
@@ -77,7 +78,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   if (isRouteProtected && profile?.validFrom) {
     const validFromDate = new Date(profile?.validFrom);
     if (!validateDateRange(new Date(), validFromDate)) {
-      if (event.request.method !== "GET" || !isBrowser()) {
+      if (event.request.method !== "GET" || !browser) {
         return new Response(JSON.stringify({ error: "unauthorized" }), { status: 401, headers: { "Content-Type": "application/json" } });
       }
       throw redirect(303, "/logout");
@@ -87,7 +88,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   if (isRouteProtected && profile?.validTo) {
     const validToDate = new Date(profile?.validTo);
     if (!validateDateRange(new Date(), undefined, validToDate)) {
-      if (event.request.method !== "GET" || !isBrowser()) {
+      if (event.request.method !== "GET" || !browser) {
         return new Response(JSON.stringify({ error: "unauthorized" }), { status: 401, headers: { "Content-Type": "application/json" } });
       }
       throw redirect(303, "/logout");

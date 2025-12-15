@@ -70,69 +70,86 @@
 </script>
 
 <div class="faux-body">
-  <h2>Bienvenue</h2>
-  {#if currentStep === "email"}
-    <form>
-      <Field label="Email" error={isEmailError} required>
-        {#snippet children(params?: any)}
-          <Text
-            bind:value={email}
-            id={params.id}
-            error={isEmailError}
-            onchange={() => (isEmailError = false)}
-            placeholder="votre@email.com"
-            disabled={isEmailValidation}
-          />
-        {/snippet}
-      </Field>
-    </form>
-    <Button
-      type="primary"
-      disabled={isEmailValidation}
-      onclick={() => validateEmailForm()}
-      >{isEmailValidation ? "Chargement..." : "Me connecter"}</Button
-    >
-  {/if}
+  <div class="form-container">
+    <header>
+      <h1>Connectez-vous</h1>
+    </header>
+    {#if currentStep === "email"}
+      <form>
+        <Field label="Email" error={isEmailError} required>
+          {#snippet children(params?: any)}
+            <Text
+              bind:value={email}
+              id={params.id}
+              error={isEmailError}
+              onchange={() => (isEmailError = false)}
+              placeholder="votre@email.com"
+              disabled={isEmailValidation}
+            />
+          {/snippet}
+        </Field>
+      </form>
+      <Button
+        type="primary block"
+        disabled={isEmailValidation}
+        onclick={() => validateEmailForm()}
+        >{isEmailValidation ? "Chargement..." : "Me connecter"}</Button
+      >
+    {/if}
 
-  {#if currentStep === "code"}
-    <form>
-      <Field label="Code" error={isCodeError} required>
-        {#snippet children(params?: any)}
-          <Text
-            bind:value={code}
-            id={params.id}
-            error={isCodeError}
-            onchange={() => (isCodeError = false)}
-            placeholder="00000000"
-            disabled={isCodeValidation}
-          />
-        {/snippet}
-      </Field>
-    </form>
-    <div class="code-validation-buttons">
-      <Button
-        type="primary"
-        disabled={isCodeValidation}
-        onclick={() => validateCodeForm()}
-        >{isCodeValidation ? "Chargement..." : "Entrer"}</Button
-      >
-      <Button
-        type="link"
-        disabled={isCodeValidation}
-        onclick={() => goBackToEmail()}>Changer l'email d'envoi</Button
-      >
-    </div>
-  {/if}
+    {#if currentStep === "code"}
+      <form>
+        <Field label="Code" error={isCodeError} required>
+          {#snippet children(params?: any)}
+            <Text
+              bind:value={code}
+              id={params.id}
+              error={isCodeError}
+              onchange={() => (isCodeError = false)}
+              placeholder="00000000"
+              disabled={isCodeValidation}
+            />
+          {/snippet}
+        </Field>
+      </form>
+      <div class="code-validation-buttons">
+        <Button
+          type="primary block"
+          disabled={isCodeValidation}
+          onclick={() => validateCodeForm()}
+          >{isCodeValidation ? "Chargement..." : "Entrer"}</Button
+        >
+        <Button
+          type="link"
+          disabled={isCodeValidation}
+          onclick={() => goBackToEmail()}>Changer l'email d'envoi</Button
+        >
+      </div>
+    {/if}
+  </div>
 </div>
 
 <style lang="scss">
+  h1 {
+    font-weight: 800;
+    font-size: 2rem;
+  }
+
+  .form-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 2em;
+  }
+
+  .faux-body {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
   .code-validation-buttons {
     display: flex;
     gap: 2rem;
-  }
-
-  h2 {
-    font-size: 4rem;
-    margin: 1.5em;
   }
 </style>

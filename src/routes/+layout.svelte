@@ -3,8 +3,25 @@
   import { Globals, Willow as WillowCore } from "@svar-ui/svelte-core";
   import { Willow as WillowGrid } from "@svar-ui/svelte-grid";
   import "../app.scss";
+  import Navbar from "$lib/components/Navbar.svelte";
+  import { afterNavigate, beforeNavigate } from "$app/navigation";
+  import { loadingPanel } from "$lib/types";
+  import Footer from "$lib/components/Footer.svelte";
+  import SideBar from "$lib/components/SideBar.svelte";
+  import LoadingPanel from "$lib/components/LoadingPanel.svelte";
+  import { browser } from "$app/environment";
+  import Notifications from "$lib/components/Notifications.svelte";
 
-  let { children } = $props();
+  let { data, children } = $props();
+  let profile = $derived(data.profile);
+
+  beforeNavigate(() => {
+    loadingPanel.start();
+  });
+
+  afterNavigate(() => {
+    loadingPanel.end();
+  });
 </script>
 
 <svelte:head>
@@ -13,8 +30,52 @@
 
 <WillowCore>
   <WillowGrid>
-    <Globals>
-      {@render children()}
-    </Globals>
+    <div class="app">
+      <Navbar isPublicRoute={data.isPublicRoute} />
+      <div class="app-content">
+        {#if !data.isPublicRoute}
+          <SideBar {profile} />
+        {/if}
+        <div class="main-container">
+          <main>
+            <Globals>
+              <Notifications />
+              {#if browser && loadingPanel.isLoadingPanel}<LoadingPanel
+                />{:else}
+                {@render children()}
+              {/if}
+            </Globals>
+          </main>
+        </div>
+      </div>
+      <Footer />
+    </div>
   </WillowGrid>
 </WillowCore>
+
+<style lang="scss">
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+  }
+
+  .app-content {
+    display: flex;
+    flex: 1;
+  }
+
+  .main-container {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+
+    main {
+      height: 100%;
+      overflow-y: scroll;
+      padding: 3rem 5rem;
+    }
+  }
+</style>

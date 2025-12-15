@@ -3,6 +3,8 @@
   import { Button } from "@svar-ui/svelte-core";
   import { DropDownMenu } from "@svar-ui/svelte-menu";
 
+  let { isPublicRoute } = $props();
+
   let options = [{ id: "logout", text: "Déconnexion", icon: "wxi-external" }];
 
   function optionClicked(ev: any) {
@@ -18,9 +20,15 @@
 </script>
 
 <header class="headerbar">
-  <DropDownMenu {options} onclick={optionClicked}>
-    <Button css="navbutton" icon="wxi-account">Compte</Button>
-  </DropDownMenu>
+  {#if isPublicRoute}
+    <Button css="navbutton">
+      <i class="fa-sharp fa-light fa-bell-concierge icon"></i> Aide</Button
+    >
+  {:else}
+    <DropDownMenu {options} onclick={optionClicked}>
+      <Button css="navbutton" icon="wxi-account">Compte</Button>
+    </DropDownMenu>
+  {/if}
 </header>
 
 <style lang="scss">

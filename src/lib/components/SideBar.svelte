@@ -57,11 +57,6 @@
     margin-bottom: 0.5rem;
   }
 
-  .icon {
-    font-size: 1.1rem;
-    margin-right: 0.25rem;
-  }
-
   .separator {
     font-weight: bold;
     color: rgb(217, 217, 217);
