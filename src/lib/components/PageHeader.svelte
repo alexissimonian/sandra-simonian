@@ -26,7 +26,7 @@
 
 <style lang="scss">
   .body-header {
-    padding-bottom: 2rem;
+    padding-bottom: 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;

@@ -1,4 +1,9 @@
-<div><i class="fa-duotone fa-solid fa-spinner-third fa-spin"></i></div>
+<div>
+  <i
+    class="fa-thumbprint fa-light fa-arrows-rotate fa-spin"
+    style="--fa-secondary-color: #ff6600;"
+  ></i>
+</div>
 
 <style lang="scss">
   div {
@@ -8,7 +13,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 3rem;
-    font-size: 2rem;
+    padding: 2.5rem;
+    font-size: 3rem;
   }
 </style>

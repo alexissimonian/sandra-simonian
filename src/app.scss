@@ -1,3 +1,5 @@
+@import "@awesome.me/kit-3be39f19c7/icons/css/all.css";
+
 @mixin flex-center {
   display: flex;
   align-items: center;
@@ -30,5 +32,6 @@ section {
 }
 
 .icon {
+  font-size: 1.1rem;
   margin-right: 0.3rem;
 }

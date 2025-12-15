@@ -11,19 +11,28 @@
       <li class="separator">App</li>
       <li>
         <Button css="sideBarLink" onclick={() => goto("/app")}
-          ><i class="fa-sharp fa-light fa-house icon"></i>Accueil</Button
+          ><i
+            class="fa-thumbprint fa-light fa-house icon"
+            style="--fa-secondary-color: red;"
+          ></i>Accueil</Button
         >
       </li>
       {#if profile?.role === "admin"}
         <li class="separator">Admin</li>
         <li>
           <Button css="sideBarLink" onclick={() => goto("/admin")}
-            ><i class="fa-sharp fa-light fa-gear icon"></i>Admin</Button
+            ><i
+              class="fa-thumbprint fa-light fa-gear icon"
+              style="--fa-secondary-color: blue;"
+            ></i>Admin</Button
           >
         </li>
         <li>
           <Button css="sideBarLink" onclick={() => goto("/admin/users")}>
-            <i class="fa-sharp fa-light fa-user-gear icon"></i> Utilisateurs</Button
+            <i
+              class="fa-thumbprint fa-light fa-circle-user icon"
+              style="--fa-secondary-color: orange;"
+            ></i> Utilisateurs</Button
           >
         </li>
       {/if}
@@ -32,7 +41,10 @@
   <div class="sidebar-bottom-container">
     <div class="sidebar-button-container">
       <Button css="sidebarbutton"
-        ><i class="fa-sharp fa-light fa-sidebar"></i></Button
+        ><i
+          class="fa-thumbprint fa-light fa-arrow-right-to-bracket fa-rotate-180"
+          style="--fa-secondary-color: #005eff;"
+        ></i></Button
       >
     </div>
   </div>
@@ -44,7 +56,7 @@
     flex-direction: column;
     min-height: 0;
     border-right: 1px solid $border-gray-color;
-    width: 260px;
+    width: 250px;
     flex-shrink: 0;
     position: relative;
 
@@ -79,8 +91,7 @@
   }
 
   .icon {
-    margin-right: 1rem;
-    color: $text-light-gray;
+    margin-right: 0.75rem;
   }
 
   .sidebar-bottom-container {

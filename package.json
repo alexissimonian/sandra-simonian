@@ -23,6 +23,7 @@
 		"vite": "^7.1.10"
 	},
 	"dependencies": {
+		"@awesome.me/kit-3be39f19c7": "^1.0.3",
 		"@supabase/ssr": "^0.7.0",
 		"@supabase/supabase-js": "^2.81.1",
 		"@svar-ui/svelte-core": "^2.3.1",

@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { Field, Text, Button, DatePicker } from "@svar-ui/svelte-core";
+  import {
+    Field,
+    Text,
+    Button,
+    DatePicker,
+    MultiCombo,
+  } from "@svar-ui/svelte-core";
   import {
     notify,
     sendFormData,
@@ -82,6 +88,8 @@
     }
     isCreating = false;
   }
+
+  let courses = [{ id: 1, label: "CV" }];
 </script>
 
 <svelte:head>
@@ -99,12 +107,6 @@
     >
   </PageHeader>
   <div class="body-content">
-    <section class="account-courses">
-      <header>
-        <h2>Cours</h2>
-      </header>
-      <div></div>
-    </section>
     <section class="account-details">
       <header>
         <h2>Détails du compte</h2>
@@ -179,6 +181,20 @@
         </div>
       </div>
     </section>
+    <section class="account-courses">
+      <div class="modules-container">
+        <header>
+          <h2>Modules</h2>
+        </header>
+        <MultiCombo checkboxes={true} options={courses} />
+      </div>
+      <div class="courses-container">
+        <header>
+          <h2>Cours</h2>
+        </header>
+        <MultiCombo checkboxes={true} options={courses} />
+      </div>
+    </section>
   </div>
 </div>
 
@@ -195,13 +211,20 @@
 
   .body-content {
     display: flex;
-    gap: 4rem;
+    gap: 10rem;
 
     .account-courses {
+      display: flex;
+      gap: 2rem;
       flex: 1;
     }
     .account-details {
       flex: 0;
     }
+
+    .courses-container, .modules-container {
+      width: 100%;
+    }
   }
+
 </style>
