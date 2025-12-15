@@ -46,9 +46,9 @@
               {/if}
             </Globals>
           </main>
+          <Footer />
         </div>
       </div>
-      <Footer />
     </div>
   </WillowGrid>
 </WillowCore>
@@ -64,17 +64,20 @@
   .app-content {
     display: flex;
     flex: 1;
+    min-height: 0;
+    overflow: hidden;
   }
 
   .main-container {
     flex: 1;
     min-width: 0;
+    min-height: 0;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
 
     main {
-      height: 100%;
-      overflow-y: scroll;
+      flex: 1;
       padding: 3rem 5rem;
     }
   }

@@ -8,6 +8,10 @@ body {
   margin: 0;
   padding: 0;
   height: 100dvh;
+  overflow-y: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 .error-message {
@@ -26,6 +30,5 @@ section {
 }
 
 .icon {
-  font-size: 1.1rem;
   margin-right: 0.3rem;
 }
