@@ -78,7 +78,7 @@
 
     main {
       flex: 1;
-      padding: 3rem 5rem;
+      padding: 3rem 7rem;
     }
   }
 </style>

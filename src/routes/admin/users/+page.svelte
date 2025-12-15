@@ -65,11 +65,11 @@
   ];
 
   const gotoEditPage = (id: string) => {
-    goto(`${page.url.pathname}/editorcreate?id=${id}`);
+    goto(`${page.url.pathname}/${id}`);
   };
 
   const gotoCreatePage = () => {
-    goto(`${page.url.pathname}/editorcreate`);
+    goto(`${page.url.pathname}/create`);
   };
 
   async function deleteSelectedUser(id: string) {
@@ -115,15 +115,14 @@
     <PageHeader
       title="Tous les utilisateurs"
       subtitle="Tu retrouves ici tous les clients. Les admin ne sont pas dans ce tableau."
-    ></PageHeader>
-    <div class="buttons-container">
+    >
       <Button
         type="primary"
         onclick={gotoCreatePage}
         disabled={hasEngagingInteraction}
-        icon="wxi-plus"
-      />
-    </div>
+        icon="wxi-plus">Ajouter</Button
+      >
+    </PageHeader>
     <div class="grid-container">
       <Grid
         data={gridData}
@@ -137,14 +136,6 @@
 </div>
 
 <style lang="scss">
-  .buttons-container {
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-    gap: 1rem;
-    padding: 0 1rem;
-  }
-
   .grid-container {
     width: 100%;
 

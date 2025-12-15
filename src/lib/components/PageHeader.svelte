@@ -1,5 +1,11 @@
 <script lang="ts">
-  let { title, subtitle } = $props();
+  import type { Snippet } from "svelte";
+
+  let {
+    title,
+    subtitle,
+    children,
+  }: { title: string; subtitle: string; children?: Snippet } = $props();
 </script>
 
 <div class="body-header">
@@ -11,12 +17,16 @@
       {subtitle}
     </p>
   </div>
-  <div class="header-actions"></div>
+  <div class="header-actions">
+    {#if children}
+      {@render children()}
+    {/if}
+  </div>
 </div>
 
 <style lang="scss">
   .body-header {
-    padding-bottom: 0.5rem;
+    padding-bottom: 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
