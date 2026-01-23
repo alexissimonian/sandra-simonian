@@ -90,6 +90,10 @@
   }
 
   let courses = [{ id: 1, label: "CV" }];
+  let exercices = [
+    { id: 1, label: "Mise en page" },
+    { id: 2, label: "Apprendre à se vendre" },
+  ];
 </script>
 
 <svelte:head>
@@ -192,7 +196,7 @@
         <header>
           <h2>Cours</h2>
         </header>
-        <MultiCombo checkboxes={true} options={courses} />
+        <MultiCombo checkboxes={true} options={exercices} />
       </div>
     </section>
   </div>
@@ -222,9 +226,9 @@
       flex: 0;
     }
 
-    .courses-container, .modules-container {
+    .courses-container,
+    .modules-container {
       width: 100%;
     }
   }
-
 </style>
