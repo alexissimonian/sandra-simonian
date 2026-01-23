@@ -27,10 +27,7 @@
   {:else}
     <DropDownMenu {options} onclick={optionClicked}>
       <Button css="navbutton">
-        <i
-          class="fa-whiteboard fa-semibold fa-circle-user icon"
-          style="--fa-secondary-color: #ff5900;"
-        ></i> Compte</Button
+        <i class="fa-whiteboard fa-semibold fa-circle-user icon"></i> Compte</Button
       >
     </DropDownMenu>
   {/if}

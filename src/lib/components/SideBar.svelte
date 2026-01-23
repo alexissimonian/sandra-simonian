@@ -1,7 +1,9 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { Button } from "@svar-ui/svelte-core";
+  import { page } from "$app/state";
 
+  let pageRoute = $derived(page.url.pathname);
   let { profile } = $props();
 </script>
 
@@ -10,29 +12,34 @@
     <ul>
       <li class="separator">App</li>
       <li>
-        <Button css="sideBarLink" onclick={() => goto("/app")}
-          ><i
-            class="fa-whiteboard fa-semibold fa-house icon"
-            style="--fa-secondary-color: red;"
-          ></i>Accueil</Button
+        <Button
+          type={pageRoute === "/app" ? "primary" : undefined}
+          css={pageRoute === "/app"
+            ? "sidebarbutton active"
+            : "sidebarbutton nonactive"}
+          onclick={() => goto("/app")}>Accueil</Button
         >
       </li>
       {#if profile?.role === "admin"}
         <li class="separator">Admin</li>
         <li>
-          <Button css="sideBarLink" onclick={() => goto("/admin")}
-            ><i
-              class="fa-whiteboard fa-semibold fa-gear icon"
-              style="--fa-secondary-color: blue;"
-            ></i>Admin</Button
+          <Button
+            type={pageRoute === "/admin" ? "primary" : undefined}
+            css={pageRoute === "/admin"
+              ? "sidebarbutton active"
+              : "sidebarbutton nonactive"}
+            onclick={() => goto("/admin")}>Admin</Button
           >
         </li>
         <li>
-          <Button css="sideBarLink" onclick={() => goto("/admin/users")}>
-            <i
-              class="fa-whiteboard fa-semibold fa-circle-user icon"
-              style="--fa-secondary-color: orange;"
-            ></i> Utilisateurs</Button
+          <Button
+            type={pageRoute === "/admin/users" ? "primary" : undefined}
+            css={pageRoute === "/admin/users"
+              ? "sidebarbutton active"
+              : "sidebarbutton nonactive"}
+            onclick={() => goto("/admin/users")}
+          >
+            Utilisateurs</Button
           >
         </li>
       {/if}
@@ -43,7 +50,6 @@
       <Button css="sidebarbutton"
         ><i
           class="fa-whiteboard fa-semibold fa-arrow-right-to-bracket fa-rotate-180"
-          style="--fa-secondary-color: #005eff;"
         ></i></Button
       >
     </div>
@@ -73,11 +79,18 @@
     padding: 0;
   }
 
-  ul :global(button.sideBarLink) {
-    background-color: white;
+  ul :global(button.sidebarbutton) {
     width: 100%;
     text-align: left;
+  }
+
+  ul :global(button.nonactive) {
+    background-color: white;
     color: $text-muted-color;
+  }
+
+  ul :global(button.active) {
+    color: white;
   }
 
   li {
@@ -87,11 +100,7 @@
   .separator {
     font-weight: bold;
     color: rgb(217, 217, 217);
-    padding: 0.3rem 1.3rem;
-  }
-
-  .icon {
-    margin-right: 0.75rem;
+    padding: 0.3rem 0.75rem;
   }
 
   .sidebar-bottom-container {

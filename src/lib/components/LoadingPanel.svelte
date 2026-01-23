@@ -1,8 +1,5 @@
 <div>
-  <i
-    class="fa-whiteboard fa-semibold fa-arrows-rotate fa-spin"
-    style="--fa-secondary-color: #ff6600;"
-  ></i>
+  <i class="fa-whiteboard fa-semibold fa-arrows-rotate fa-spin"></i>
 </div>
 
 <style lang="scss">
@@ -14,6 +11,6 @@
     flex-direction: column;
     align-items: center;
     padding: 2.5rem;
-    font-size: 3rem;
+    font-size: 2rem;
   }
 </style>
