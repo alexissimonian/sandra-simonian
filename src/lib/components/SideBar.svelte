@@ -12,7 +12,7 @@
       <li>
         <Button css="sideBarLink" onclick={() => goto("/app")}
           ><i
-            class="fa-thumbprint fa-light fa-house icon"
+            class="fa-whiteboard fa-semibold fa-house icon"
             style="--fa-secondary-color: red;"
           ></i>Accueil</Button
         >
@@ -22,7 +22,7 @@
         <li>
           <Button css="sideBarLink" onclick={() => goto("/admin")}
             ><i
-              class="fa-thumbprint fa-light fa-gear icon"
+              class="fa-whiteboard fa-semibold fa-gear icon"
               style="--fa-secondary-color: blue;"
             ></i>Admin</Button
           >
@@ -30,7 +30,7 @@
         <li>
           <Button css="sideBarLink" onclick={() => goto("/admin/users")}>
             <i
-              class="fa-thumbprint fa-light fa-circle-user icon"
+              class="fa-whiteboard fa-semibold fa-circle-user icon"
               style="--fa-secondary-color: orange;"
             ></i> Utilisateurs</Button
           >
@@ -42,7 +42,7 @@
     <div class="sidebar-button-container">
       <Button css="sidebarbutton"
         ><i
-          class="fa-thumbprint fa-light fa-arrow-right-to-bracket fa-rotate-180"
+          class="fa-whiteboard fa-semibold fa-arrow-right-to-bracket fa-rotate-180"
           style="--fa-secondary-color: #005eff;"
         ></i></Button
       >

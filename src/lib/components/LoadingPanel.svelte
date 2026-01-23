@@ -1,6 +1,6 @@
 <div>
   <i
-    class="fa-thumbprint fa-light fa-arrows-rotate fa-spin"
+    class="fa-whiteboard fa-semibold fa-arrows-rotate fa-spin"
     style="--fa-secondary-color: #ff6600;"
   ></i>
 </div>

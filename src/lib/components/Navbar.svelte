@@ -28,7 +28,7 @@
     <DropDownMenu {options} onclick={optionClicked}>
       <Button css="navbutton">
         <i
-          class="fa-thumbprint fa-light fa-circle-user icon"
+          class="fa-whiteboard fa-semibold fa-circle-user icon"
           style="--fa-secondary-color: #ff5900;"
         ></i> Compte</Button
       >
