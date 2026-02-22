@@ -14,7 +14,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      activity: {
+      activities: {
         Row: {
           created_at: string
           id: string
@@ -38,7 +38,7 @@ export type Database = {
         }
         Relationships: []
       }
-      activity_profiles: {
+      activities_profiles: {
         Row: {
           activity_id: string
           profile_id: string
@@ -59,7 +59,7 @@ export type Database = {
             foreignKeyName: "activités_profiles_activite_id_fkey"
             columns: ["activity_id"]
             isOneToOne: false
-            referencedRelation: "activity"
+            referencedRelation: "activities"
             referencedColumns: ["id"]
           },
           {
@@ -95,7 +95,7 @@ export type Database = {
         }
         Relationships: []
       }
-      modules_activity: {
+      modules_activities: {
         Row: {
           activity_id: string
           module_id: string
@@ -113,7 +113,7 @@ export type Database = {
             foreignKeyName: "modules_activités_activite_id_fkey"
             columns: ["activity_id"]
             isOneToOne: false
-            referencedRelation: "activity"
+            referencedRelation: "activities"
             referencedColumns: ["id"]
           },
           {

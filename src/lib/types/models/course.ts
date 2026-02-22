@@ -4,6 +4,7 @@ export interface Module {
   id: string;
   name: string;
   description: string;
+  activities: Activity[];
 }
 
 export interface Activity {
@@ -12,4 +13,8 @@ export interface Activity {
 }
 
 export type ModuleRow = Tables<"modules">;
-export type ActivityRow = Tables<"activités">;
+export type ActivityRow = Tables<"activities">;
+
+export type ModuleActivityRow = ModuleRow & {
+  modules_activities: { activities: Activity }[];
+};

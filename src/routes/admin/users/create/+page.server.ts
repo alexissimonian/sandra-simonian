@@ -5,11 +5,7 @@ import {
   validateEmailField,
   validateNameField,
 } from "$lib/utils";
-import {
-  getAllModules,
-  getAllActivities,
-  getAllModulesAndActivities,
-} from "$lib/server/services/adminCourses/adminCoursesRequest";
+import { getAllModules } from "$lib/server/services/adminCourses/adminCoursesRequest";
 import { createUserProfile } from "$lib/server/services/adminUser/adminUserCommand";
 import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
@@ -17,13 +13,10 @@ import type { Module, Activity } from "$lib/types";
 
 let modules: Module[] = [];
 let activities: Activity[] = [];
-let modulesActivities: any[];
 export const load: PageServerLoad = async () => {
   try {
     modules = await getAllModules();
-    activities = await getAllActivities();
-    modulesActivities = await getAllModulesAndActivities();
-    console.log(JSON.stringify(modulesActivities, null, 2));
+    activities = extractAllActivitiesFromModules(modules);
   } catch (error) {
     console.error(error);
   }
@@ -90,3 +83,8 @@ export const actions: Actions = {
     }
   },
 };
+
+function extractAllActivitiesFromModules(modules: Module[]): Activity[] {
+  const result = modules.flatMap((m) => m.activities);
+  return result;
+}
