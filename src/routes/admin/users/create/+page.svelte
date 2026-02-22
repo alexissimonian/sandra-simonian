@@ -17,9 +17,13 @@
   import { goto } from "$app/navigation";
   import PageHeader from "$lib/components/PageHeader.svelte";
   import type { PageData } from "./$types";
+  import type { Activity, Module } from "$lib/types";
+  import { onMount } from "svelte";
 
   let { data }: { data: PageData } = $props();
 
+  // TODO: faire des customs field avec erreur intégrées pour la validation des input
+  // TODO: modifier les notifs
   let lastname = $state("");
   let isLastnameError = $state(false);
   let firstname = $state("");
@@ -31,7 +35,42 @@
   let validToDate: Date | undefined = $state(undefined);
   let isValidFromDateError = $state(false);
   let isValidToDateError = $state(false);
+  let activityToModules = new Map<string, Set<string>>();
+  let moduleToActivities = new Map<string, Set<string>>();
 
+  //on mount : build lookup activity to module and module to activity
+  onMount(() => {
+    buildActivitiesAndModulesLookups();
+  });
+
+  let activities = data.activities.map((da) => {
+    return { id: da.id, label: da.name };
+  });
+
+  let selectedActivities = $state<string[]>([]);
+
+  let modules = data.modules.map((dm) => {
+    return { id: dm.id, label: dm.name };
+  });
+
+  let selectedModules = $state<string[]>([]);
+
+  function onActivitySelected(): void {
+    const currentlySelectedModules = new Set(selectedModules);
+    const newlySelectedModules = new Set<string>();
+    moduleToActivities.forEach((v: Set<string>, k: string) => {
+      if (v.isSupersetOf(new Set(selectedActivities))) {
+        newlySelectedModules.add(k);
+      }
+    });
+    const selectedModulesSet =
+      currentlySelectedModules.union(newlySelectedModules);
+    selectedModules = [...selectedModulesSet];
+  }
+
+  function onModuleSelected(): void {}
+
+  // form validation
   async function validateForm() {
     isCreating = true;
     if ((isLastnameError = !validateNameField(lastname)))
@@ -93,13 +132,21 @@
     isCreating = false;
   }
 
-  let activities = data.activities.map((da) => {
-    return { id: da.id, label: da.name };
-  });
+  function buildActivitiesAndModulesLookups() {
+    for (const mod of data.modules) {
+      moduleToActivities.set(
+        mod.id,
+        new Set(mod.activities.map((a: Activity) => a.id)),
+      );
 
-  let modules = data.modules.map((dm) => {
-    return { id: dm.id, label: dm.name };
-  });
+      for (const activity of mod.activities) {
+        if (!activityToModules.has(activity.id)) {
+          activityToModules.set(activity.id, new Set());
+        }
+        activityToModules.get(activity.id)!.add(mod.id);
+      }
+    }
+  }
 </script>
 
 <svelte:head>
@@ -196,13 +243,22 @@
         <header>
           <h2>Modules</h2>
         </header>
-        <MultiCombo checkboxes={true} options={modules} />
+        <MultiCombo
+          checkboxes={true}
+          options={modules}
+          bind:value={selectedModules}
+        />
       </div>
       <div class="courses-container">
         <header>
           <h2>Cours</h2>
         </header>
-        <MultiCombo checkboxes={true} options={activities} />
+        <MultiCombo
+          checkboxes={true}
+          options={activities}
+          bind:value={selectedActivities}
+          onchange={onActivitySelected}
+        />
       </div>
     </section>
   </div>
