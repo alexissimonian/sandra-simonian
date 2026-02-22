@@ -14,7 +14,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      activités: {
+      activity: {
         Row: {
           created_at: string
           id: string
@@ -38,28 +38,28 @@ export type Database = {
         }
         Relationships: []
       }
-      activités_profiles: {
+      activity_profiles: {
         Row: {
-          activite_id: string
+          activity_id: string
           profile_id: string
           status: string
         }
         Insert: {
-          activite_id: string
+          activity_id: string
           profile_id: string
           status?: string
         }
         Update: {
-          activite_id?: string
+          activity_id?: string
           profile_id?: string
           status?: string
         }
         Relationships: [
           {
             foreignKeyName: "activités_profiles_activite_id_fkey"
-            columns: ["activite_id"]
+            columns: ["activity_id"]
             isOneToOne: false
-            referencedRelation: "activités"
+            referencedRelation: "activity"
             referencedColumns: ["id"]
           },
           {
@@ -95,25 +95,25 @@ export type Database = {
         }
         Relationships: []
       }
-      modules_activités: {
+      modules_activity: {
         Row: {
-          activite_id: string
+          activity_id: string
           module_id: string
         }
         Insert: {
-          activite_id: string
+          activity_id: string
           module_id: string
         }
         Update: {
-          activite_id?: string
+          activity_id?: string
           module_id?: string
         }
         Relationships: [
           {
             foreignKeyName: "modules_activités_activite_id_fkey"
-            columns: ["activite_id"]
+            columns: ["activity_id"]
             isOneToOne: false
-            referencedRelation: "activités"
+            referencedRelation: "activity"
             referencedColumns: ["id"]
           },
           {
@@ -161,7 +161,7 @@ export type Database = {
         }
         Relationships: []
       }
-      thématiques: {
+      themes: {
         Row: {
           created_at: string
           description: string
@@ -185,18 +185,18 @@ export type Database = {
         }
         Relationships: []
       }
-      thématiques_modules: {
+      themes_modules: {
         Row: {
           id_module: string
-          id_thématique: string
+          id_theme: string
         }
         Insert: {
           id_module: string
-          id_thématique: string
+          id_theme: string
         }
         Update: {
           id_module?: string
-          id_thématique?: string
+          id_theme?: string
         }
         Relationships: [
           {
@@ -208,9 +208,9 @@ export type Database = {
           },
           {
             foreignKeyName: "thématiques_modules_id_thématique_fkey"
-            columns: ["id_thématique"]
+            columns: ["id_theme"]
             isOneToOne: false
-            referencedRelation: "thématiques"
+            referencedRelation: "themes"
             referencedColumns: ["id"]
           },
         ]

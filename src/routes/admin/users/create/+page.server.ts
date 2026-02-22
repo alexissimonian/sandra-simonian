@@ -1,7 +1,35 @@
 import { type Actions } from "@sveltejs/kit";
-import { getComparableTodayDate, validateDateRange, validateEmailField, validateNameField } from "$lib/utils";
+import {
+  getComparableTodayDate,
+  validateDateRange,
+  validateEmailField,
+  validateNameField,
+} from "$lib/utils";
+import {
+  getAllModules,
+  getAllActivities,
+  getAllModulesAndActivities,
+} from "$lib/server/services/adminCourses/adminCoursesRequest";
 import { createUserProfile } from "$lib/server/services/adminUser/adminUserCommand";
 import { error } from "@sveltejs/kit";
+import type { PageServerLoad } from "./$types";
+import type { Module, Activity } from "$lib/types";
+
+let modules: Module[] = [];
+let activities: Activity[] = [];
+let modulesActivities: any[];
+export const load: PageServerLoad = async () => {
+  try {
+    modules = await getAllModules();
+    activities = await getAllActivities();
+    modulesActivities = await getAllModulesAndActivities();
+    console.log(JSON.stringify(modulesActivities, null, 2));
+  } catch (error) {
+    console.error(error);
+  }
+
+  return { modules, activities };
+};
 
 export const actions: Actions = {
   create: async ({ request }) => {
@@ -18,26 +46,47 @@ export const actions: Actions = {
 
     if (validFromDateString) {
       validFromDate = new Date(validFromDateString);
-      isValidFromDateInRange = validateDateRange(validFromDate, getComparableTodayDate())
+      isValidFromDateInRange = validateDateRange(
+        validFromDate,
+        getComparableTodayDate(),
+      );
     }
 
     if (validToDateString) {
       validToDate = new Date(validToDateString);
-      isValidToDateInRange = validateDateRange(validToDate, validFromDate ?? getComparableTodayDate())
+      isValidToDateInRange = validateDateRange(
+        validToDate,
+        validFromDate ?? getComparableTodayDate(),
+      );
     }
 
     const isLastnameValidated = validateNameField(lastname);
     const isFirstnameValidated = validateNameField(firstname);
     const isEmailValidated = validateEmailField(email);
 
-    if (isLastnameValidated && isFirstnameValidated && isEmailValidated && isValidFromDateInRange && isValidToDateInRange) {
-      const { error: createUserProfileError } = await createUserProfile(email.toLocaleLowerCase(), lastname.toLocaleLowerCase(), firstname.toLocaleLowerCase(), validFromDate, validToDate);
+    if (
+      isLastnameValidated &&
+      isFirstnameValidated &&
+      isEmailValidated &&
+      isValidFromDateInRange &&
+      isValidToDateInRange
+    ) {
+      const { error: createUserProfileError } = await createUserProfile(
+        email.toLocaleLowerCase(),
+        lastname.toLocaleLowerCase(),
+        firstname.toLocaleLowerCase(),
+        validFromDate,
+        validToDate,
+      );
       if (createUserProfileError) {
         console.error(createUserProfileError);
-        throw error(500, "Un problème est survenu lors de la création de l'utilisateur.");
+        throw error(
+          500,
+          "Un problème est survenu lors de la création de l'utilisateur.",
+        );
       }
     } else {
       throw error(400, "Echec lors de la validation de l'utilisateur.");
     }
   },
-}
+};

@@ -16,6 +16,9 @@
   } from "$lib/utils";
   import { goto } from "$app/navigation";
   import PageHeader from "$lib/components/PageHeader.svelte";
+  import type { PageData } from "./$types";
+
+  let { data }: { data: PageData } = $props();
 
   let lastname = $state("");
   let isLastnameError = $state(false);
@@ -86,14 +89,17 @@
         notify("danger", message.error.message ?? "Un problème est survenu...");
       }
     }
+
     isCreating = false;
   }
 
-  let courses = [{ id: 1, label: "CV" }];
-  let exercices = [
-    { id: 1, label: "Mise en page" },
-    { id: 2, label: "Apprendre à se vendre" },
-  ];
+  let activities = data.activities.map((da) => {
+    return { id: da.id, label: da.name };
+  });
+
+  let modules = data.modules.map((dm) => {
+    return { id: dm.id, label: dm.name };
+  });
 </script>
 
 <svelte:head>
@@ -190,13 +196,13 @@
         <header>
           <h2>Modules</h2>
         </header>
-        <MultiCombo checkboxes={true} options={courses} />
+        <MultiCombo checkboxes={true} options={modules} />
       </div>
       <div class="courses-container">
         <header>
           <h2>Cours</h2>
         </header>
-        <MultiCombo checkboxes={true} options={exercices} />
+        <MultiCombo checkboxes={true} options={activities} />
       </div>
     </section>
   </div>
